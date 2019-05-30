@@ -31,3 +31,10 @@ def followpath():
     '''
     raise NotImplementedError
     return None
+
+def stopeverything():
+    '''
+    This directs the robot to cease all movement.
+    '''
+    raise NotImplementedError
+    return None
