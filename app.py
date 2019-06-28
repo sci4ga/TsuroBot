@@ -9,31 +9,29 @@ import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-# Configure root logger file location and rotation, and the output format
-logfile = "./logs/smtp.log"
+# Configure logger directory and rotation, output format, and level
+logfile = "./logs/tsuro.log"
 logging.basicConfig(level=logging.DEBUG)
 handler = TimedRotatingFileHandler(logfile, when="midnight", backupCount=30)
 handler.setFormatter(logging.Formatter('%(levelname)s:%(asctime)s:%(message)s'))
 handler.setLevel(logging.DEBUG)
 logging.getLogger('').addHandler(handler)
-
 logger = logging.getLogger(__name__)
 
 with open('config.json') as f:
     envconfig = json.load(f)
-
 if not envconfig['debug_enabled']:
     logger.setLevel(logging.INFO)
 
 app = connexion.App(__name__, specification_dir='./')
-app.add_api('swagger.yml')
+app.add_api('api.yml')
 
 
 @app.route('/')
 def index():
     # TODO: supply list of logs
     templateData = {'logs': []}
-    return render_template('templates/index.html', **templateData)
+    return render_template('index.html', **templateData)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,10 @@
 This is the tsuro module and supports all the ReST actions for the
 'tsuro' collection
 """
+# import 3rd party modules
+from flask import make_response
+# import native modules
+import logging
 
 
 def get_start():
@@ -10,4 +14,4 @@ def get_start():
     with a '200' upon successful startup
     """
 
-    return None
+    return make_response('Tsuro started', 200)
