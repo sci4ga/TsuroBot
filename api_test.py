@@ -4,10 +4,12 @@ This is the test module and supports all the ReST actions for the
 """
 
 # 3rd party modules
-import pip
+import pkg_resources
 from flask import make_response
 # native modules
 import logging
+import platform
+import socket
 # local modules
 
 
@@ -19,23 +21,18 @@ def get_info():
     : return:        json with a 'packages' array and 'other' string
     """
 
-    packages_list = sorted(["%s==%s" % (i.key, i.version) for i in pip.get_installed_distributions()])
+    packages_list = [d.project_name + "==" + pkg_resources.get_distribution(d.project_name).version
+                     for d in pkg_resources.working_set]
+ 
+    other = socket.gethostname() + " - " + platform.platform()
 
-    other = "in progress"
-
-    return make_response('Test successful', 200)
+    return {'packages': packages_list, 'other': other}
 
 
 def get_test():
     """
     This function responds to a request for /test/info
     with a lists of application and system info
-
-    : return:        json with a 'packages' array and 'other' string
     """
 
-    packages_list = sorted(["%s==%s" % (i.key, i.version) for i in pip.get_installed_distributions()])
-
-    other = "in progress"
-
-    return {'packages': packages_list, 'other': other}
+    return make_response('Test successful', 200)

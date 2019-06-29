@@ -48,9 +48,8 @@ components:
   schemas:
     Info:
       properties:
-        libraries:
+        packages:
           type: array
         other:
           type: string
-      required:  
-        - libraries
+
