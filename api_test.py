@@ -10,7 +10,7 @@ from flask import make_response
 import logging
 import platform
 import socket
-import git
+# import git
 # local modules
 
 
@@ -38,12 +38,12 @@ def get_test():
 
     return make_response('Test successful', 200)
 
-def git_pull():
-    """
-    This function updates the RobotTsuro code in the raspberry pi without the need for ssh
-    """
-    g = git.cmd.Git(git_dir)
-    g.pull()
+# def git_pull():
+#     """
+#     This function updates the RobotTsuro code in the raspberry pi without the need for ssh
+#     """
+#     g = git.cmd.Git(git_dir)
+#     g.pull()
 
 
 
