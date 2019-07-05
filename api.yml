@@ -19,6 +19,30 @@ paths:
       responses:
         '200':
           description: Success
+  /git:
+    get:
+      operationId: api_test.get_git_pull
+      summary: Git pull
+      description: Returns 200
+      parameters:
+      - name: branch_name
+        in: query
+        description: Name of branch to pull from
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          default: master
+          enum:
+          - Dev
+          - QA
+          - master
+      tags:
+        - test
+      responses:
+        '200':
+          description: Success
   /info:
     get:
       operationId: api_test.get_info
