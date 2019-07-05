@@ -43,7 +43,16 @@ paths:
       responses:
         '200':
           description: Success - Tsuro program started
-
+  /tsuro/stop:
+    get:
+      operationId: api_tsuro.get_stop
+      tags:
+        - tsuro
+      summary: Stop the tsuro program
+      description: Returns 200
+      responses:
+        '200':
+          description: Success - Tsuro program stopped
 components:
   schemas:
     Info:

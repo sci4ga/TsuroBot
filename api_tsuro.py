@@ -15,3 +15,11 @@ def get_start():
     """
 
     return make_response('Tsuro started', 200)
+
+def get_stop():
+    """
+    This function responds to a request for /tsuro/stop
+    with a '200' upon successful stop
+    """
+
+    return make_response('Tsuro stop', 200)
