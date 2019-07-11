@@ -38,12 +38,19 @@ def get_test():
 
     return make_response('Test successful', 200)
 
-# def git_pull():
-#     """
-#     This function updates the RobotTsuro code in the raspberry pi without the need for ssh
-#     """
-#     g = git.cmd.Git(git_dir)
-#     g.pull()
 
+def get_git_pull(branch_name):
+    """
+    This function updates the RobotTsuro code in the raspberry pi without the need for ssh
+    """
+    # git pull origin [branch]
+    g = git.Git('./')
+    g.pull('origin', branch_name)
+    repo = git.Repo('./')
+    branch = repo.head.ref.name
+    commit_id = str(repo.head.commit)
+    commit_message = repo.head.commit.message
+    response_message = f'Successful git pull on {branch} for commit {commit_id}: {commit_message}'
+    logging.info(response_message)
 
-
+    return make_response(response_message, 200)
