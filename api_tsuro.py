@@ -28,8 +28,6 @@ def get_start():
     bw.speed = SPEED
     bw.forward()
     bw_status = 1
-    import os
-    os.cmd('python3 ./tsuro/start.py')
     
     return make_response('Tsuro started: speed' + SPEED, 200)
 
