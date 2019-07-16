@@ -7,48 +7,38 @@ from flask import make_response
 # import native modules
 import logging
 
+
 def get_start():
     """
     This function responds to a request for /tsuro/start
     with a '200' upon successful startup
     """
+    from tsuro import tsurobot
 
-    import picar
-    from picar import back_wheels, front_wheels
+    tsurobot.back_wheels.speed = 50
+    tsurobot.back_wheels.forward()
 
-    picar.setup()
-    db_file = "/Users/andrewtsai/personal-projects/RobotTsuro/config"
-    fw = front_wheels.Front_Wheels(debug=False, db=db_file)
-    bw = back_wheels.Back_Wheels(debug=False, db=db_file)
-    bw.ready()
-    fw.ready()
+    return make_response('Tsuro started', 200)
 
-    SPEED = 60
-    bw_status = 0
-    bw.speed = SPEED
-    bw.forward()
-    bw_status = 1
-    
-    return make_response('Tsuro started: speed' + SPEED, 200)
 
 def get_stop():
     """
     This function responds to a request for /tsuro/stop
     with a '200' upon successful stop
     """
-    import picar
-    from picar import back_wheels, front_wheels
+    from tsuro import tsurobot
 
-    picar.setup()
-    db_file = "/Users/andrewtsai/personal-projects/RobotTsuro/config"
-    fw = front_wheels.Front_Wheels(debug=False, db=db_file)
-    bw = back_wheels.Back_Wheels(debug=False, db=db_file)
-    bw.ready()
-    fw.ready()
-
-    SPEED = 60
-    bw_status = 0
-    bw.stop()
-    bw_status = 0
+    tsurobot.back_wheels.stop()
 
     return make_response('Tsuro stop', 200)
+
+def post_launch_game():
+    """
+    This function responds to a request for /tsuro/launch_game
+    with a '200' upon successful completion
+    """
+    from tsuro import tsurobot
+
+    tsurobot.launch_game()
+
+    return make_response('Tsuro game complete', 200)
