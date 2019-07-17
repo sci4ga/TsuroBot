@@ -9,19 +9,59 @@ servers:
     description: Use IP Scanner to identify full URL
 
 paths:
-  /test:
+  /ack:
     get:
-      operationId: api_test.get_test
+      operationId: api_dev.get_ack
       tags:
-        - test
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /test_back_wheels:
+    post:
+      operationId: api_dev.post_test_back_wheels
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /test_front_wheels:
+    post:
+      operationId: api_dev.post_test_front_wheels
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /test_vertical_view:
+    post:
+      operationId: api_dev.post_test_vertical_view
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /test_horizontal_view:
+    post:
+      operationId: api_dev.post_test_horizontal_view
+      tags:
+        - dev
       summary: Test communication
       description: Returns 200
       responses:
         '200':
           description: Success
   /git:
-    get:
-      operationId: api_test.get_git_pull
+    put:
+      operationId: api_dev.put_git_pull
       summary: Git pull
       description: Returns 200
       parameters:
@@ -39,15 +79,15 @@ paths:
           - QA
           - master
       tags:
-        - test
+        - dev
       responses:
         '200':
           description: Success
   /info:
     get:
-      operationId: api_test.get_info
+      operationId: api_dev.get_info
       tags:
-        - test
+        - dev
       summary: Provides application info.
       description: Returns installed packages with versions.
       responses:
@@ -57,9 +97,9 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Info'
-  /tsuro/start:
-    get:
-      operationId: api_tsuro.get_start
+  /tsuro/launch_game:
+    post:
+      operationId: api_tsuro.post_launch_game
       tags:
         - tsuro
       summary: Launch the tsuro program
@@ -67,16 +107,7 @@ paths:
       responses:
         '200':
           description: Success - Tsuro program started
-  /tsuro/stop:
-    get:
-      operationId: api_tsuro.get_stop
-      tags:
-        - tsuro
-      summary: Stop the tsuro program
-      description: Returns 200
-      responses:
-        '200':
-          description: Success - Tsuro program stopped
+
 components:
   schemas:
     Info:

@@ -1,5 +1,5 @@
 # import native modules
-import time
+
 # local imports
 import picar
 
@@ -8,31 +8,14 @@ class Tsurobot:
     def __init__(self, db_file):
         self.front_wheels = picar.front_wheels.Front_Wheels(debug=False, db=db_file)
         self.back_wheels = picar.back_wheels.Back_Wheels(debug=False, db=db_file)
+        # TODO: add vertical view
+        # TODO: add horizontal view
         self.front_wheels.ready()
         self.back_wheels.ready()
         self.next_game_action = "look_for_board"
 
-    def test_back_wheels(self):
-        self.back_wheels.speed = 50
-        self.back_wheels.forward()
-        time.sleep(2)
-        self.back_wheels.stop()
-        time.sleep(1)
-        self.back_wheels.backward()
-        time.sleep(2)
-        self.back_wheels.stop()
-
-    def test_front_wheels(self):
-        self.front_wheels.turn_left()
-        time.sleep(1)
-        self.front_wheels.turn_straight()
-        time.sleep(1)
-        self.front_wheels.turn_right()
-        time.sleep(1)
-        self.front_wheels.turn_straight()
-
     def launch_game(self):
-        while(self.game_state != "DONE"):
+        while(self.next_game_action != "DONE"):
             self.next_game_action = getattr(self, self.next_game_action)()
         return None
 
