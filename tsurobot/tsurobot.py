@@ -1,18 +1,11 @@
-# import native modules
-
 # local imports
-import picar
+from picar import picarv
 
 
-class Tsurobot:
+class Tsurobot(picarv.PicarV):
     def __init__(self, db_file):
-        self.front_wheels = picar.front_wheels.Front_Wheels(debug=False, db=db_file)
-        self.back_wheels = picar.back_wheels.Back_Wheels(debug=False, db=db_file)
-        # TODO: add vertical view
-        # TODO: add horizontal view
-        self.front_wheels.ready()
-        self.back_wheels.ready()
         self.next_game_action = "look_for_board"
+        picarv.PicarV.__init__(self)
 
     def launch_game(self):
         while(self.next_game_action != "DONE"):
@@ -63,7 +56,3 @@ class Tsurobot:
         raise NotImplementedError
         next_action = ""
         return next_action
-
-
-picar.setup()
-tsurobot = Tsurobot("./config")

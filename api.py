@@ -13,6 +13,9 @@ import socket
 import git
 import time
 # local modules
+from tsurobot.tsurobot import Tsurobot
+
+tsurobot = Tsurobot("./config")
 
 
 def get_info():
@@ -63,8 +66,6 @@ def post_test_back_wheels():
     This function responds to a request for /test_back_wheels/
     with a '200' upon successful startup
     """
-    from tsuro import tsurobot
-
     tsurobot.back_wheels.speed = 10
     tsurobot.back_wheels.forward()
     time.sleep(1)
@@ -84,8 +85,6 @@ def post_test_front_wheels():
     This function responds to a request for /test_front_wheels/
     with a '200' upon successful startup
     """
-    from tsuro import tsurobot
-
     tsurobot.front_wheels.turn_left()
     time.sleep(1)
     tsurobot.front_wheels.turn_straight()
@@ -113,3 +112,13 @@ def post_test_horizontal_view():
     """
     raise NotImplementedError
     return make_response('Tsurobot horizontal view test complete', 200)
+
+
+def post_launch_game():
+    """
+    This function responds to a request for /tsuro/launch_game
+    with a '200' upon successful completion
+    """
+    tsurobot.launch_game()
+
+    return make_response('Tsuro game play complete', 200)

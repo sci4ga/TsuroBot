@@ -11,7 +11,7 @@ servers:
 paths:
   /ack:
     get:
-      operationId: api_dev.get_ack
+      operationId: api.get_ack
       tags:
         - dev
       summary: Test communication
@@ -21,7 +21,7 @@ paths:
           description: Success
   /test_back_wheels:
     post:
-      operationId: api_dev.post_test_back_wheels
+      operationId: api.post_test_back_wheels
       tags:
         - dev
       summary: Test communication
@@ -31,7 +31,7 @@ paths:
           description: Success
   /test_front_wheels:
     post:
-      operationId: api_dev.post_test_front_wheels
+      operationId: api.post_test_front_wheels
       tags:
         - dev
       summary: Test communication
@@ -41,7 +41,7 @@ paths:
           description: Success
   /test_vertical_view:
     post:
-      operationId: api_dev.post_test_vertical_view
+      operationId: api.post_test_vertical_view
       tags:
         - dev
       summary: Test communication
@@ -51,7 +51,7 @@ paths:
           description: Success
   /test_horizontal_view:
     post:
-      operationId: api_dev.post_test_horizontal_view
+      operationId: api.post_test_horizontal_view
       tags:
         - dev
       summary: Test communication
@@ -61,7 +61,7 @@ paths:
           description: Success
   /git:
     put:
-      operationId: api_dev.put_git_pull
+      operationId: api.put_git_pull
       summary: Git pull
       description: Returns 200
       parameters:
@@ -85,7 +85,7 @@ paths:
           description: Success
   /info:
     get:
-      operationId: api_dev.get_info
+      operationId: api.get_info
       tags:
         - dev
       summary: Provides application info.
