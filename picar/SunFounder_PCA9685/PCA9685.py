@@ -18,34 +18,34 @@ import math
 
 class PWM(object):
     """A PWM control class for PCA9685."""
-    _MODE1              = 0x00
-    _MODE2              = 0x01
-    _SUBADR1            = 0x02
-    _SUBADR2            = 0x03
-    _SUBADR3            = 0x04
-    _PRESCALE           = 0xFE
-    _LED0_ON_L          = 0x06
-    _LED0_ON_H          = 0x07
-    _LED0_OFF_L         = 0x08
-    _LED0_OFF_H         = 0x09
-    _ALL_LED_ON_L       = 0xFA
-    _ALL_LED_ON_H       = 0xFB
-    _ALL_LED_OFF_L      = 0xFC
-    _ALL_LED_OFF_H      = 0xFD
+    _MODE1 = 0x00
+    _MODE2 = 0x01
+    _SUBADR1 = 0x02
+    _SUBADR2 = 0x03
+    _SUBADR3 = 0x04
+    _PRESCALE = 0xFE
+    _LED0_ON_L = 0x06
+    _LED0_ON_H = 0x07
+    _LED0_OFF_L = 0x08
+    _LED0_OFF_H = 0x09
+    _ALL_LED_ON_L = 0xFA
+    _ALL_LED_ON_H = 0xFB
+    _ALL_LED_OFF_L = 0xFC
+    _ALL_LED_OFF_H = 0xFD
 
-    _RESTART            = 0x80
-    _SLEEP              = 0x10
-    _ALLCALL            = 0x01
-    _INVRT              = 0x10
-    _OUTDRV             = 0x04
+    _RESTART = 0x80
+    _SLEEP = 0x10
+    _ALLCALL = 0x01
+    _INVRT = 0x10
+    _OUTDRV = 0x04
 
     RPI_REVISION_0 = ["900092"]
-    RPI_REVISION_1_MODULE_B  = ["Beta", "0002", "0003", "0004", "0005", "0006", "000d", "000e", "000f"]
-    RPI_REVISION_1_MODULE_A  = ["0007", "0008", "0009"]
+    RPI_REVISION_1_MODULE_B = ["Beta", "0002", "0003", "0004", "0005", "0006", "000d", "000e", "000f"]
+    RPI_REVISION_1_MODULE_A = ["0007", "0008", "0009"]
     RPI_REVISION_1_MODULE_BP = ["0010", "0013"]
     RPI_REVISION_1_MODULE_AP = ["0012"]
-    RPI_REVISION_2_MODULE_B  = ["a01041", "a21041"]
-    RPI_REVISION_3_MODULE_B  = ["a02082", "a22082", "a32082"]
+    RPI_REVISION_2_MODULE_B = ["a01041", "a21041"]
+    RPI_REVISION_3_MODULE_B = ["a02082", "a22082", "a32082"]
     RPI_REVISION_3_MODULE_BP = ["a020d3"]
     RPI_REVISION_3_MODULE_AP = ["9020e0"]
 
