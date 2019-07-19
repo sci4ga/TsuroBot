@@ -99,7 +99,7 @@ paths:
                 $ref: '#/components/schemas/Info'
   /tsuro/launch_game:
     post:
-      operationId: api_tsuro.post_launch_game
+      operationId: api.post_launch_game
       tags:
         - tsuro
       summary: Launch the tsuro program

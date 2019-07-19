@@ -5,7 +5,7 @@ from picar import picarv
 class Tsurobot(picarv.PicarV):
     def __init__(self, db_file):
         self.next_game_action = "look_for_board"
-        picarv.PicarV.__init__(self)
+        picarv.PicarV.__init__(self, db_file)
 
     def launch_game(self):
         while(self.next_game_action != "DONE"):
