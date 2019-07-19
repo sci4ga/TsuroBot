@@ -66,7 +66,7 @@ def post_test_back_wheels():
     This function responds to a request for /test_back_wheels/
     with a '200' upon successful startup
     """
-    tsurobot.back_wheels.speed = 10
+    tsurobot.back_wheels.speed = 100
     tsurobot.back_wheels.forward()
     time.sleep(1)
     tsurobot.back_wheels.speed = 20
