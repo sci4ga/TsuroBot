@@ -114,11 +114,11 @@ def post_test_horizontal_view():
     return make_response('Tsurobot horizontal view test complete', 200)
 
 
-def post_launch_game():
+def post_launch_game(action):
     """
     This function responds to a request for /tsuro/launch_game
     with a '200' upon successful completion
     """
-    tsurobot.launch_game()
+    tsurobot.launch_game(action)
 
     return make_response('Tsuro game play complete', 200)
