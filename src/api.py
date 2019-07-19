@@ -13,7 +13,7 @@ import socket
 import git
 import time
 # local modules
-from tsurobot.tsurobot import Tsurobot
+from tsuro.tsurobot import Tsurobot, play_game
 
 tsurobot = Tsurobot("./config")
 
@@ -114,11 +114,11 @@ def post_test_horizontal_view():
     return make_response('Tsurobot horizontal view test complete', 200)
 
 
-def post_launch_game(action):
+def post_play_game(action):
     """
     This function responds to a request for /tsuro/launch_game
     with a '200' upon successful completion
     """
-    tsurobot.launch_game(action)
+    play_game(tsurobot)
 
     return make_response('Tsuro game play complete', 200)

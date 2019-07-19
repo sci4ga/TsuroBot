@@ -11,7 +11,7 @@
 *               Cavon    2016-11-04    fix for submodules
 **********************************************************************
 '''
-from .SunFounder_PCA9685 import Servo
+from ServoMotorDriver import Servo
 from . import filedb
 
 

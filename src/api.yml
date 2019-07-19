@@ -97,16 +97,16 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Info'
-  /tsuro/launch_game:
+  /tsuro/play_game:
     post:
-      operationId: api.post_launch_game
+      operationId: api.post_play_game
       tags:
         - tsuro
-      summary: Launch the tsuro program
+      summary: Play the tsuro program
       description: Returns 200
       responses:
         '200':
-          description: Success - Tsuro program started
+          description: Tsuro program complete
 
 components:
   schemas:
