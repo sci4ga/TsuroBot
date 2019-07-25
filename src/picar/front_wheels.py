@@ -149,9 +149,8 @@ class Front_Wheels(object):
         self.db.set('turning_offset', self.turning_offset)
 
 
-def test(chn=0):
+def test(front_wheels = Front_Wheels(channel=0)):
     import time
-    front_wheels = Front_Wheels(channel=chn)
     try:
         while True:
             print("turn_left")

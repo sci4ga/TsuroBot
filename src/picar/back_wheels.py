@@ -153,9 +153,8 @@ class Back_Wheels(object):
         self.stop()
 
 
-def test():
-    import time
-    back_wheels = Back_Wheels()
+def test(back_wheels = Back_Wheels()):
+    import time    
     DELAY = 0.01
     try:
         back_wheels.forward()
