@@ -11,7 +11,7 @@
 *               Cavon    2016-11-04    fix for submodules
 **********************************************************************
 '''
-from ServoMotorDriver import Servo
+from driver_servo_motor import Servo
 from . import filedb
 
 

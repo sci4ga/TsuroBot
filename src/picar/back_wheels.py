@@ -12,8 +12,8 @@
 **********************************************************************
 '''
 
-from DCMotorDriver import TB6612
-from ServoMotorDriver import PCA9685
+from driver_dc_motor import TB6612
+from driver_servo_motor import PCA9685
 from . import filedb
 
 

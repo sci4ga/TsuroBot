@@ -10,7 +10,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 
 # Configure logger directory and rotation, output format, and level
-logfile = "./logs/tsuro.log"
+logfile = ".././logs/tsuro.log"
 logging.basicConfig(level=logging.DEBUG)
 handler = TimedRotatingFileHandler(logfile, when="midnight", backupCount=30)
 handler.setFormatter(logging.Formatter('%(levelname)s:%(asctime)s:%(message)s'))

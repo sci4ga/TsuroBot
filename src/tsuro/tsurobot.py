@@ -16,6 +16,9 @@ class Tsurobot(picarv.PicarV):
     """
     There ain't no bot like a Tsurobot.
     """
+    def __init__(self, db_file="./config"):
+        picarv.PicarV.__init__(self, db_file)
+
     def look_for_board(self):
         """
         This checks if the Tsurobot is in the calibration position on the board.

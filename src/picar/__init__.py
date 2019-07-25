@@ -1,8 +1,8 @@
 import sys
 from . import front_wheels
 from . import back_wheels
-from .SunFounder_PCA9685 import Servo
-from .SunFounder_PCA9685 import PCA9685
+from driver_servo_motor import Servo
+from driver_servo_motor import PCA9685
 
 
 def servo_install():
