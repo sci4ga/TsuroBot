@@ -12,7 +12,7 @@
 **********************************************************************
 '''
 from driver_servo_motor import Servo
-from . import filedb
+import json
 
 
 class Front_Wheels(object):
@@ -24,11 +24,13 @@ class Front_Wheels(object):
 
     def __init__(self, debug=False, db="config", bus_number=1, channel=FRONT_WHEEL_CHANNEL):
         ''' setup channels and basic stuff '''
-        self.db = filedb.fileDB(db=db)
+        with open(config) as f:
+            self.config = json.load(f)
+    
         self._channel = channel
         self._straight_angle = 90
         self.turning_max = 45
-        self._turning_offset = int(self.db.get('turning_offset', default_value=0))
+        self._turning_offset = self.config['turning_offset']
 
         self.wheel = Servo.Servo(self._channel, bus_number=bus_number, offset=self.turning_offset)
         self.debug = debug
@@ -94,7 +96,9 @@ class Front_Wheels(object):
         if not isinstance(value, int):
             raise TypeError('"turning_offset" must be "int"')
         self._turning_offset = value
-        self.db.set('turning_offset', value)
+        self.config["turning_offset"] = value
+        with open(config, 'w') as outfile:
+            json.dump(self.config, outfile)
         self.wheel.offset = value
         self.turn_straight()
 

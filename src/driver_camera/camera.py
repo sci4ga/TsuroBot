@@ -13,7 +13,7 @@
 
 from picar.SunFounder_PCA9685 import Servo
 import time
-from picar import filedb
+import json
 
 
 class Camera(object):
@@ -33,11 +33,12 @@ class Camera(object):
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "camera.py":'
 
-    def __init__(self, debug=False, bus_number=1, db="config"):
+    def __init__(self, debug=False, bus_number=1, config="config.json"):
         ''' Init the servo channel '''
-        self.db = filedb.fileDB(db=db)
-        self.pan_offset = int(self.db.get('pan_offset', default_value=0))
-        self.tilt_offset = int(self.db.get('tilt_offset', default_value=0))
+        with open(config) as f:
+            self.config = json.load(f)
+        self.pan_offset = self.config['pan_offset']
+        self.tilt_offset = self.config['tilt_offset']
 
         self.pan_servo = Servo.Servo(self.pan_channel, bus_number=bus_number, offset=self.pan_offset)
         self.tilt_servo = Servo.Servo(self.tilt_channel, bus_number=bus_number, offset=self.tilt_offset)
@@ -168,8 +169,10 @@ class Camera(object):
         ''' Save the calibration value '''
         self.pan_offset = self.cali_pan_offset
         self.tilt_offset = self.cali_tilt_offset
-        self.db.set('pan_offset', self.pan_offset)
-        self.db.set('tilt_offset', self.tilt_offset)
+        self.config['pan_offset'] = self.pan_offset
+        self.config['tilt_offset'] = self.tilt_offset
+        with open(config, 'w') as outfile:
+            json.dump(self.config, outfile)
 
     @property
     def debug(self):

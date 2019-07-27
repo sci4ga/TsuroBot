@@ -14,7 +14,7 @@
 
 from driver_dc_motor import TB6612
 from driver_servo_motor import PCA9685
-from . import filedb
+import json
 
 
 class Back_Wheels(object):
@@ -28,15 +28,13 @@ class Back_Wheels(object):
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "back_wheels.py":'
 
-    def __init__(self, debug=False, bus_number=1, db="config"):
+    def __init__(self, debug=False, bus_number=1, config="config.json"):
         ''' Init the direction channel and pwm channel '''
-        self.forward_A = True
-        self.forward_B = True
+        with open(config) as f:
+            self.config = json.load(f)
 
-        self.db = filedb.fileDB(db=db)
-
-        self.forward_A = int(self.db.get('forward_A', default_value=1))
-        self.forward_B = int(self.db.get('forward_B', default_value=1))
+        self.forward_A = self.config["left_polarity_correction"]
+        self.forward_B = self.config["right_polarity_correction"]
 
         self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.forward_A)
         self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.forward_B)
@@ -148,8 +146,10 @@ class Back_Wheels(object):
         ''' Save the calibration value '''
         self.forward_A = self.cali_forward_A
         self.forward_B = self.cali_forward_B
-        self.db.set('forward_A', self.forward_A)
-        self.db.set('forward_B', self.forward_B)
+        self.config["left_polarity_correction"] = self.forward_A
+        self.config["right_polarity_correction"] = self.forward_B
+        with open(config, 'w') as outfile:
+            json.dump(self.config, outfile)
         self.stop()
 
 
