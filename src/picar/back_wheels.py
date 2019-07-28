@@ -15,6 +15,9 @@
 from driver_dc_motor import TB6612
 from driver_servo_motor import PCA9685
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Back_Wheels(object):
@@ -28,16 +31,13 @@ class Back_Wheels(object):
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "back_wheels.py":'
 
-    def __init__(self, debug=False, bus_number=1, config="config.json"):
+    def __init__(self, config, debug=False, bus_number=1):
         ''' Init the direction channel and pwm channel '''
         with open(config) as f:
             self.config = json.load(f)
 
-        self.forward_A = self.config["left_polarity_correction"]
-        self.forward_B = self.config["right_polarity_correction"]
-
-        self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.forward_A)
-        self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.forward_B)
+        self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.config["left_polarity_correction"])
+        self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.config["right_polarity_correction"])
 
         self.pwm = PCA9685.PWM(bus_number=bus_number)
 
@@ -60,7 +60,7 @@ class Back_Wheels(object):
 
     def _debug_(self, message):
         if self._DEBUG:
-            print(self._DEBUG_INFO, message)
+            logger.info(message)
 
     def forward(self):
         ''' Move both wheels forward '''
@@ -118,8 +118,8 @@ class Back_Wheels(object):
     def ready(self):
         ''' Get the back wheels to the ready position. (stop) '''
         self._debug_('Turn to "Ready" position')
-        self.left_wheel.offset = self.forward_A
-        self.right_wheel.offset = self.forward_B
+        self.left_wheel.offset = self.config["left_polarity_correction"]
+        self.right_wheel.offset = self.config["right_polarity_correction"]
         self.stop()
 
     def calibration(self):
@@ -127,8 +127,8 @@ class Back_Wheels(object):
         self._debug_('Turn to "Calibration" position')
         self.speed = 50
         self.forward()
-        self.cali_forward_A = self.forward_A
-        self.cali_forward_B = self.forward_B
+        self.cali_forward_A = self.config["left_polarity_correction"]
+        self.cali_forward_B = self.config["right_polarity_correction"]
 
     def cali_left(self):
         ''' Reverse the left wheels forward direction in calibration '''
@@ -144,16 +144,15 @@ class Back_Wheels(object):
 
     def cali_ok(self):
         ''' Save the calibration value '''
-        self.forward_A = self.cali_forward_A
-        self.forward_B = self.cali_forward_B
-        self.config["left_polarity_correction"] = self.forward_A
-        self.config["right_polarity_correction"] = self.forward_B
+        self.config["left_polarity_correction"] = self.cali_forward_A
+        self.config["right_polarity_correction"] = self.cali_forward_B
         with open(config, 'w') as outfile:
             json.dump(self.config, outfile)
         self.stop()
 
 
-def test(back_wheels = Back_Wheels()):
+def test(config):
+    back_wheels = Back_Wheels(config)
     import time    
     DELAY = 0.01
     try:

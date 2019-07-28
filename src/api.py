@@ -15,7 +15,8 @@ import time
 # local modules
 from tsuro.tsurobot import Tsurobot, play_game
 
-tsurobot = Tsurobot("./config")
+config_file = "./config.json"
+tsurobot = Tsurobot(config_file)
 
 
 def get_info():

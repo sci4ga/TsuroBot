@@ -2,7 +2,7 @@
 '''
 **********************************************************************
 * Filename    : PCA9685.py
-* Description : A driver module for PCA9685
+* Description : This driver module is for SunFounder PCA9685 the PCB board, a 16-channel 12-bit I2C Bus PWM Driver.
 * Author      : Cavon
 * Brand       : SunFounder
 * E-mail      : service@sunfounder.com

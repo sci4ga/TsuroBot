@@ -13,7 +13,9 @@
 '''
 from driver_servo_motor import Servo
 import json
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Front_Wheels(object):
     ''' Front wheels control class '''
@@ -22,11 +24,11 @@ class Front_Wheels(object):
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "front_wheels.py":'
 
-    def __init__(self, debug=False, db="config", bus_number=1, channel=FRONT_WHEEL_CHANNEL):
+    def __init__(self, config, debug=False, bus_number=1, channel=FRONT_WHEEL_CHANNEL):
         ''' setup channels and basic stuff '''
         with open(config) as f:
             self.config = json.load(f)
-    
+        logger.info(str(self.config))
         self._channel = channel
         self._straight_angle = 90
         self.turning_max = 45
@@ -150,10 +152,13 @@ class Front_Wheels(object):
     def cali_ok(self):
         ''' Save the calibration value '''
         self.turning_offset = self.cali_turning_offset
-        self.db.set('turning_offset', self.turning_offset)
+        self.config["turning_offset"] = self.turning_offset
+        with open(config, 'w') as outfile:
+            json.dump(self.config, outfile)
 
 
-def test(front_wheels = Front_Wheels(channel=0)):
+def test(config):
+    front_wheels = Front_Wheels(config, channel=0)
     import time
     try:
         while True:
