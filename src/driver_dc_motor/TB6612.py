@@ -1,14 +1,6 @@
 #!/usr/bin/env python
 '''
-**********************************************************************
-* Filename    : TB6612.py
-* Description : A driver module for TB6612
-* Author      : Cavon
-* Brand       : SunFounder
-* E-mail      : service@sunfounder.com
-* Website     : www.sunfounder.com
-* Update      : Cavon    2016-09-23    New release
-**********************************************************************
+This module is for SunFounder TB6612 the PCB board, a 2 Channel Motor Driver.
 '''
 import RPi.GPIO as GPIO
 

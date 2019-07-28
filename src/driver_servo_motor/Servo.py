@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 '''
-**********************************************************************
-* Filename    : Servo.py
-* Description : Driver module for servo, with PCA9685
-* Author      : Cavon
-* Brand       : SunFounder
-* E-mail      : service@sunfounder.com
-* Website     : www.sunfounder.com
-* Update      : Cavon    2016-09-13    New release
-*               Cavon    2016-09-21    Change channel from 1 to all
-**********************************************************************
+Driver module for servo, with PCA9685
 '''
 
 from . import PCA9685

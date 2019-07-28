@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 '''
-**********************************************************************
-* Filename    : back_wheels.py
-* Description : A module to control the back wheels of RPi Car
-* Author      : Cavon
-* Brand       : SunFounder
-* E-mail      : service@sunfounder.com
-* Website     : www.sunfounder.com
-* Update      : Cavon    2016-09-13    New release
-*               Cavon    2016-11-04    fix for submodules
-**********************************************************************
+A module to control the back wheels of RPi Car
 '''
 
 from driver_dc_motor import TB6612
@@ -36,10 +27,13 @@ class Back_Wheels(object):
         with open(config) as f:
             self.config = json.load(f)
 
+        self.debug = debug
         self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.config["left_polarity_correction"])
         self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.config["right_polarity_correction"])
-
         self.pwm = PCA9685.PWM(bus_number=bus_number)
+        self.left_wheel.debug = debug
+        self.right_wheel.debug = debug
+        self.pwm.debug = debug
 
         def _set_a_pwm(value):
             pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
@@ -54,12 +48,9 @@ class Back_Wheels(object):
 
         self._speed = 0
 
-        self.debug = debug
-        self._debug_('Set left wheel to #%d, PWM channel to %d' % (self.Motor_A, self.PWM_A))
-        self._debug_('Set right wheel to #%d, PWM channel to %d' % (self.Motor_B, self.PWM_B))
 
     def _debug_(self, message):
-        if self._DEBUG:
+        if self.debug:
             logger.info(message)
 
     def forward(self):
@@ -92,95 +83,19 @@ class Back_Wheels(object):
         self.right_wheel.speed = self._speed
         self._debug_('Set speed to %s' % self._speed)
 
-    @property
-    def debug(self):
-        return self._DEBUG
-
-    @debug.setter
-    def debug(self, debug):
-        ''' Set if debug information shows '''
-        if debug in (True, False):
-            self._DEBUG = debug
-        else:
-            raise ValueError('debug must be "True" (Set debug on) or "False" (Set debug off), not "{0}"'.format(debug))
-
-        if self._DEBUG:
-            print(self._DEBUG_INFO, "Set debug on")
-            self.left_wheel.debug = True
-            self.right_wheel.debug = True
-            self.pwm.debug = True
-        else:
-            print(self._DEBUG_INFO, "Set debug off")
-            self.left_wheel.debug = False
-            self.right_wheel.debug = False
-            self.pwm.debug = False
-
-    def ready(self):
-        ''' Get the back wheels to the ready position. (stop) '''
-        self._debug_('Turn to "Ready" position')
-        self.left_wheel.offset = self.config["left_polarity_correction"]
-        self.right_wheel.offset = self.config["right_polarity_correction"]
-        self.stop()
-
-    def calibration(self):
-        ''' Get the front wheels to the calibration position. '''
-        self._debug_('Turn to "Calibration" position')
-        self.speed = 50
-        self.forward()
-        self.cali_forward_A = self.config["left_polarity_correction"]
-        self.cali_forward_B = self.config["right_polarity_correction"]
-
-    def cali_left(self):
+    def calibrate_left_polarity(self):
         ''' Reverse the left wheels forward direction in calibration '''
-        self.cali_forward_A = (1 + self.cali_forward_A) & 1
-        self.left_wheel.offset = self.cali_forward_A
-        self.forward()
-
-    def cali_right(self):
-        ''' Reverse the right wheels forward direction in calibration '''
-        self.cali_forward_B = (1 + self.cali_forward_B) & 1
-        self.right_wheel.offset = self.cali_forward_B
-        self.forward()
-
-    def cali_ok(self):
-        ''' Save the calibration value '''
-        self.config["left_polarity_correction"] = self.cali_forward_A
-        self.config["right_polarity_correction"] = self.cali_forward_B
+        self.config["left_polarity_correction"] = not self.config["left_polarity_correction"]
+        self.left_wheel.offset = self.config["left_polarity_correction"]
         with open(config, 'w') as outfile:
             json.dump(self.config, outfile)
-        self.stop()
 
-
-def test(config):
-    back_wheels = Back_Wheels(config)
-    import time    
-    DELAY = 0.01
-    try:
-        back_wheels.forward()
-        for i in range(0, 100):
-            back_wheels.speed = i
-            print("Forward, speed =", i)
-            time.sleep(DELAY)
-        for i in range(100, 0, -1):
-            back_wheels.speed = i
-            print("Forward, speed =", i)
-            time.sleep(DELAY)
-
-        back_wheels.backward()
-        for i in range(0, 100):
-            back_wheels.speed = i
-            print("Backward, speed =", i)
-            time.sleep(DELAY)
-        for i in range(100, 0, -1):
-            back_wheels.speed = i
-            print("Backward, speed =", i)
-            time.sleep(DELAY)
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt, motor stop")
-        back_wheels.stop()
-    finally:
-        print("Finished, motor stop")
-        back_wheels.stop()
+    def calibrate_right_polarity(self):
+        ''' Reverse the right wheels forward direction in calibration '''
+        self.config["right_polarity_correction"] = not self.config["right_polarity_correction"]
+        self.right_wheel.offset = self.config["right_polarity_correction"]
+        with open(config, 'w') as outfile:
+            json.dump(self.config, outfile)
 
 
 if __name__ == '__main__':
