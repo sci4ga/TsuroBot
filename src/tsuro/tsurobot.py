@@ -1,15 +1,8 @@
 # local imports
 from picar import picarv
+import logging
 
-'''
-we want a state machine
-each state "function" should only have logic for what happens in that state
-    granularity goes down to "move this motor"
-    returns success or failure, and nothing else
-        maybe details of success or failure, but it shouldn't care about how that success or failure gets handled
-Something else (say, def state_machine?) determines how to move from one state to the other
-    and what to do when something fails or succeeds
-'''
+logger = logging.getLogger(__name__)
 
 
 class Tsurobot(picarv.PicarV):
@@ -17,6 +10,7 @@ class Tsurobot(picarv.PicarV):
     There ain't no bot like a Tsurobot.
     """
     def __init__(self, config_json="./config.json"):
+        logger.info("Initializing Tsurobot with config: {0}".format(str(config_json)))
         picarv.PicarV.__init__(self, config_json)
 
     def look_for_board(self):
@@ -26,6 +20,7 @@ class Tsurobot(picarv.PicarV):
         Returns:
             True if calibration area found, False otherwise
         """
+        logger.info("Looking for board")
         # note: car will be in a calibration box that's in front of the edge of the board
         # Maybe rename to something that means "Verify I am in calibration box"?
         # camera check and calibrate by looking up and down for start dot / pair of dots that have directionality
@@ -49,6 +44,7 @@ class Tsurobot(picarv.PicarV):
         Returns:
             True if calibration succeeds, False otherwise
         '''
+        logger.info("Calibrating to board")
         # note: car will be in a calibration box that's in front of the edge of the board
         # camera white balance
         # camera pan and tilt so that it can look for next path
@@ -65,6 +61,7 @@ class Tsurobot(picarv.PicarV):
         Returns:
             True if successful, False otherwise
         '''
+        logger.info("Moving to start")
         # move forward until we see start mark
         raise NotImplementedError
         return True
@@ -76,6 +73,7 @@ class Tsurobot(picarv.PicarV):
         Returns:
             True if a Tsuro tile is found, False otherwise
         '''
+        logger.info("Awaiting tile")
         # Camera looks at path
         # Once cv says "path exists" and "tile is completely set down", move to follow_path
         raise NotImplementedError
@@ -88,6 +86,7 @@ class Tsurobot(picarv.PicarV):
         Returns:
             True if ending at an empty tile space, False otherwise(collision, edge of board)
         '''
+        logger.info("Following path")
         # follow the path using CV (be able to correct steering for small errors, but not overcorrect)
         # once CV says "edge of board imminent", move to await_tile
         # if you see bot, move to DONE and make sad noise
@@ -107,6 +106,7 @@ def play_game(tsurobot=Tsurobot(), next_game_action="look_for_board"):
     Returns:
         None
     """
+    logger.info("Playing Tsuro with next game action: {0}".format(str(next_game_action)))
     # Here's the state machine for gameplay
     while(next_game_action):
         if next_game_action == "look_for_board":

@@ -4,6 +4,9 @@ Driver module for servo, with PCA9685
 '''
 
 from . import PCA9685
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Servo(object):
@@ -13,14 +16,12 @@ class Servo(object):
     _DEFAULT_PULSE_WIDTH = 1500
     _FREQUENCY = 60
 
-    _DEBUG = False
-    _DEBUG_INFO = 'DEBUG "Servo.py":'
-
     def __init__(self, channel, offset=0, lock=True, bus_number=None, address=0x40):
         ''' Init a servo on specific channel, this offset '''
+        logger.info("Initialize servo motor with channel: {0}, offset: {1}, lock: {2}, bus_number: {3}, address: {4}".format(
+                    str(channel), str(offset), str(lock), str(bus_number), str(address)))
         if channel < 0 or channel > 16:
             raise ValueError("Servo channel \"{0}\" is not in (0, 15).".format(channel))
-        self._debug_("Debug on")
         self.channel = channel
         self.offset = offset
         self.lock = lock
@@ -29,10 +30,6 @@ class Servo(object):
         self.frequency = self._FREQUENCY
         self.write(90)
 
-    def _debug_(self, message):
-        if self._DEBUG:
-            print(self._DEBUG_INFO, message)
-
     def setup(self):
         self.pwm.setup()
 
@@ -40,7 +37,7 @@ class Servo(object):
         ''' Calculate 12-bit analog value from giving angle '''
         pulse_wide = self.pwm.map(angle, 0, 180, self._MIN_PULSE_WIDTH, self._MAX_PULSE_WIDTH)
         analog_value = int(float(pulse_wide) / 1000000 * self.frequency * 4096)
-        self._debug_('Angle %d equals Analog_value %d' % (angle, analog_value))
+        logger.debug('Angle %d equals Analog_value %d' % (angle, analog_value))
         return analog_value
 
     @property
@@ -60,7 +57,7 @@ class Servo(object):
     def offset(self, value):
         ''' Set offset for much user-friendly '''
         self._offset = value
-        self._debug_('Set offset to %d' % self.offset)
+        logger.debug('Set offset to %d' % self.offset)
 
     def write(self, angle):
         ''' Turn the servo with giving angle. '''
@@ -75,24 +72,7 @@ class Servo(object):
         val = self._angle_to_analog(angle)
         val += self.offset
         self.pwm.write(self.channel, 0, val)
-        self._debug_('Turn angle = %d' % angle)
-
-    @property
-    def debug(self):
-        return self._DEBUG
-
-    @debug.setter
-    def debug(self, debug):
-        ''' Set if debug information shows '''
-        if debug in (True, False):
-            self._DEBUG = debug
-        else:
-            raise ValueError('debug must be "True" (Set debug on) or "False" (Set debug off), not "{0}"'.format(debug))
-
-        if self._DEBUG:
-            print(self._DEBUG_INFO, "Set debug on")
-        else:
-            print(self._DEBUG_INFO, "Set debug off")
+        logger.debug('Turn angle = %d' % angle)
 
 
 def test():
@@ -101,17 +81,17 @@ def test():
     a = Servo(1)
     a.setup()
     for i in range(0, 180, 5):
-        print(i)
+        logger.info(i)
         a.write(i)
         time.sleep(0.1)
     for i in range(180, 0, -5):
-        print(i)
+        logger.info(i)
         a.write(i)
         time.sleep(0.1)
     for i in range(0, 91, 2):
         a.write(i)
         time.sleep(0.05)
-    print(i)
+    logger.info(i)
 
 
 def install():

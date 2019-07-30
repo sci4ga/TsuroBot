@@ -14,6 +14,9 @@ import git
 import time
 # local modules
 from tsuro.tsurobot import Tsurobot, play_game
+import logging
+
+logger = logging.getLogger(__name__)
 
 config_file = "./config.json"
 tsurobot = Tsurobot(config_file)

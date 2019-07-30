@@ -21,12 +21,11 @@ class Front_Wheels(object):
     ''' Front wheels control class '''
     FRONT_WHEEL_CHANNEL = 0
 
-    _DEBUG = False
-    _DEBUG_INFO = 'DEBUG "front_wheels.py":'
-
-    def __init__(self, config, debug=False, bus_number=1, channel=FRONT_WHEEL_CHANNEL):
+    def __init__(self, config_file, bus_number=1, channel=FRONT_WHEEL_CHANNEL):
         ''' setup channels and basic stuff '''
-        with open(config) as f:
+        logger.info("Initializing front wheels with bus number: {0}, config_file: {1}, channel: {2}".format( 
+                    str(bus_number), str(config_file), str(channel)))
+        with open(config_file) as f:
             self.config = json.load(f)
         logger.info(str(self.config))
         self._channel = channel
@@ -35,35 +34,30 @@ class Front_Wheels(object):
         self._turning_offset = self.config['turning_offset']
 
         self.wheel = Servo.Servo(self._channel, bus_number=bus_number, offset=self.turning_offset)
-        self.debug = debug
-        self._debug_('Front wheel PWM channel: %s' % self._channel)
-        self._debug_('Front wheel offset value: %s ' % self.turning_offset)
+        logger.debug('Front wheel PWM channel: %s' % self._channel)
+        logger.debug('Front wheel offset value: %s ' % self.turning_offset)
 
         self._angle = {"left": self._min_angle, "straight": self._straight_angle, "right": self._max_angle}
-        self._debug_('left angle: %s, straight angle: %s, right angle: %s' % (self._angle["left"], self._angle["straight"], self._angle["right"]))
-
-    def _debug_(self, message):
-        if self._DEBUG:
-            print(self._DEBUG_INFO, message)
+        logger.debug('left angle: %s, straight angle: %s, right angle: %s' % (self._angle["left"], self._angle["straight"], self._angle["right"]))
 
     def turn_left(self):
         ''' Turn the front wheels left '''
-        self._debug_("Turn left")
+        logger.debug("Turn left")
         self.wheel.write(self._angle["left"])
 
     def turn_straight(self):
         ''' Turn the front wheels back straight '''
-        self._debug_("Turn straight")
+        logger.debug("Turn straight")
         self.wheel.write(self._angle["straight"])
 
     def turn_right(self):
         ''' Turn the front wheels right '''
-        self._debug_("Turn right")
+        logger.debug("Turn right")
         self.wheel.write(self._angle["right"])
 
     def turn(self, angle):
         ''' Turn the front wheels to the giving angle '''
-        self._debug_("Turn to %s " % angle)
+        logger.debug("Turn to %s " % angle)
         if angle < self._angle["left"]:
             angle = self._angle["left"]
         if angle > self._angle["right"]:
@@ -104,36 +98,15 @@ class Front_Wheels(object):
         self.wheel.offset = value
         self.turn_straight()
 
-    @property
-    def debug(self):
-        return self._DEBUG
-
-    @debug.setter
-    def debug(self, debug):
-        ''' Set if debug information shows '''
-        if debug in (True, False):
-            self._DEBUG = debug
-        else:
-            raise ValueError('debug must be "True" (Set debug on) or "False" (Set debug off), not "{0}"'.format(debug))
-
-        if self._DEBUG:
-            print(self._DEBUG_INFO, "Set debug on")
-            print(self._DEBUG_INFO, "Set wheel debug on")
-            self.wheel.debug = True
-        else:
-            print(self._DEBUG_INFO, "Set debug off")
-            print(self._DEBUG_INFO, "Set wheel debug off")
-            self.wheel.debug = False
-
     def ready(self):
         ''' Get the front wheels to the ready position. '''
-        self._debug_('Turn to "Ready" position')
+        logger.debug('Turn to "Ready" position')
         self.wheel.offset = self.turning_offset
         self.turn_straight()
 
     def calibration(self):
         ''' Get the front wheels to the calibration position. '''
-        self._debug_('Turn to "Calibration" position')
+        logger.debug('Turn to "Calibration" position')
         self.turn_straight()
         self.cali_turning_offset = self.turning_offset
 
@@ -153,30 +126,5 @@ class Front_Wheels(object):
         ''' Save the calibration value '''
         self.turning_offset = self.cali_turning_offset
         self.config["turning_offset"] = self.turning_offset
-        with open(config, 'w') as outfile:
+        with open(config_file, 'w') as outfile:
             json.dump(self.config, outfile)
-
-
-def test(config):
-    front_wheels = Front_Wheels(config, channel=0)
-    import time
-    try:
-        while True:
-            print("turn_left")
-            front_wheels.turn_left()
-            time.sleep(1)
-            print("turn_straight")
-            front_wheels.turn_straight()
-            time.sleep(1)
-            print("turn_right")
-            front_wheels.turn_right()
-            time.sleep(1)
-            print("turn_straight")
-            front_wheels.turn_straight()
-            time.sleep(1)
-    except KeyboardInterrupt:
-        front_wheels.turn_straight()
-
-
-if __name__ == '__main__':
-    test()

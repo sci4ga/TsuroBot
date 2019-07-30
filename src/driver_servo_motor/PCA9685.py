@@ -6,7 +6,9 @@ This driver module is for SunFounder PCA9685 the PCB board, a 16-channel 12-bit 
 import smbus
 import time
 import math
+import logging
 
+logger = logging.getLogger(__name__)
 
 class PWM(object):
     """A PWM control class for PCA9685."""
@@ -40,9 +42,6 @@ class PWM(object):
     RPI_REVISION_3_MODULE_B = ["a02082", "a22082", "a32082"]
     RPI_REVISION_3_MODULE_BP = ["a020d3"]
     RPI_REVISION_3_MODULE_AP = ["9020e0"]
-
-    _DEBUG = False
-    _DEBUG_INFO = 'DEBUG "PCA9685.py":'
 
     def _get_bus_number(self):
         pi_revision = self._get_pi_revision()
@@ -93,18 +92,19 @@ class PWM(object):
                     elif line[11:-1] in self.RPI_REVISION_3_MODULE_AP:
                         return '3 Module A+'
                     else:
-                        print("Error. Pi revision didn't recognize, module number: %s" % line[11:-1])
-                        print('Exiting...')
+                        logger.error("Error. Pi revision didn't recognize, module number: %s" % line[11:-1])
+                        logger.warning('Exiting...')
                         quit()
         except Exception as e:
             f.close()
-            print(e)
-            print('Exiting...')
+            logger.error(str(e))
+            logger.warning('Exiting...')
             quit()
         finally:
             f.close()
 
     def __init__(self, bus_number=None, address=0x40):
+        logger.info("Initializing PWM with bus_number: {0}, address: {1}".format(bus_number, address))
         self.address = address
         if bus_number is None:
             self.bus_number = self._get_bus_number()
@@ -112,13 +112,9 @@ class PWM(object):
             self.bus_number = bus_number
         self.bus = smbus.SMBus(self.bus_number)
 
-    def _debug_(self, message):
-        if self._DEBUG:
-            print(self._DEBUG_INFO, message)
-
     def setup(self):
         '''Init the class with bus_number and address'''
-        self._debug_('Reseting PCA9685 MODE1 (without SLEEP) and MODE2')
+        logger.debug('Reseting PCA9685 MODE1 (without SLEEP) and MODE2')
         self.write_all_value(0, 0)
         self._write_byte_data(self._MODE2, self._OUTDRV)
         self._write_byte_data(self._MODE1, self._ALLCALL)
@@ -132,42 +128,42 @@ class PWM(object):
 
     def _write_byte_data(self, reg, value):
         '''Write data to I2C with self.address'''
-        self._debug_('Writing value %2X to %2X' % (value, reg))
+        logger.debug('Writing value %2X to %2X' % (value, reg))
         try:
             self.bus.write_byte_data(self.address, reg, value)
         except Exception as i:
-            print(i)
+            logger.info(i)
             self._check_i2c()
 
     def _read_byte_data(self, reg):
         '''Read data from I2C with self.address'''
-        self._debug_('Reading value from %2X' % reg)
+        logger.debug('Reading value from %2X' % reg)
         try:
             results = self.bus.read_byte_data(self.address, reg)
             return results
         except Exception as i:
-            print(i)
+            logger.info(i)
             self._check_i2c()
 
     def _check_i2c(self):
         import commands
         bus_number = self._get_bus_number()
-        print("\nYour Pi Rivision is: %s" % self._get_pi_revision())
-        print("I2C bus number is: %s" % bus_number)
-        print("Checking I2C device:")
+        logger.info("\nYour Pi Rivision is: %s" % self._get_pi_revision())
+        logger.info("I2C bus number is: %s" % bus_number)
+        logger.info("Checking I2C device:")
         cmd = "ls /dev/i2c-%d" % bus_number
         output = commands.getoutput(cmd)
-        print('Commands "%s" output:' % cmd)
-        print(output)
+        logger.info('Commands "%s" output:' % cmd)
+        logger.info(output)
         if '/dev/i2c-%d' % bus_number in output.split(' '):
-            print("I2C device setup OK")
+            logger.info("I2C device setup OK")
         else:
-            print("Seems like I2C have not been set, Use 'sudo raspi-config' to set I2C")
+            logger.warning("Seems like I2C have not been set, Use 'sudo raspi-config' to set I2C")
         cmd = "i2cdetect -y %s" % self.bus_number
         output = commands.getoutput(cmd)
-        print("Your PCA9685 address is set to 0x%02X" % self.address)
-        print("i2cdetect output:")
-        print(output)
+        logger.info("Your PCA9685 address is set to 0x%02X" % self.address)
+        logger.info("i2cdetect output:")
+        logger.info(output)
         outputs = output.split('\n')[1:]
         addresses = []
         for tmp_addresses in outputs:
@@ -176,17 +172,17 @@ class PWM(object):
             for address in tmp_addresses:
                 if address != '--':
                     addresses.append(address)
-        print("Conneceted i2c device:")
+        logger.info("Conneceted i2c device:")
         if addresses == []:
-            print("None")
+            logger.info("None")
         else:
             for address in addresses:
-                print("  0x%s" % address)
+                logger.info("  0x%s" % address)
         if "%02X" % self.address in addresses:
-            print("I2C device is connected. Try running the program again or email info@Sci4GA.org.")
+            logger.info("I2C device is connected. Try running the program again or email info@Sci4GA.org.")
         else:
-            print("Device is missing.")
-            print("Check the address & wiring of PCA9685 Servo driver. Email info@Sci4GA.org if issue remains.")
+            logger.warning("Device is missing.")
+            logger.warning("Check the address & wiring of PCA9685 Servo driver. Email info@Sci4GA.org if issue remains.")
         raise IOError('IO error')
 
     @property
@@ -196,16 +192,16 @@ class PWM(object):
     @frequency.setter
     def frequency(self, freq):
         '''Set PWM frequency'''
-        self._debug_('Set frequency to %d' % freq)
+        logger.debug('Set frequency to %d' % freq)
         self._frequency = freq
         prescale_value = 25000000.0
         prescale_value /= 4096.0
         prescale_value /= float(freq)
         prescale_value -= 1.0
-        self._debug_('Setting PWM frequency to %d Hz' % freq)
-        self._debug_('Estimated pre-scale: %d' % prescale_value)
+        logger.debug('Setting PWM frequency to %d Hz' % freq)
+        logger.debug('Estimated pre-scale: %d' % prescale_value)
         prescale = math.floor(prescale_value + 0.5)
-        self._debug_('Final pre-scale: %d' % prescale)
+        logger.debug('Final pre-scale: %d' % prescale)
 
         old_mode = self._read_byte_data(self._MODE1)
         new_mode = (old_mode & 0x7F) | 0x10
@@ -217,7 +213,7 @@ class PWM(object):
 
     def write(self, channel, on, off):
         '''Set on and off value on specific channel'''
-        self._debug_('Set channel "%d" to value "%d"' % (channel, off))
+        logger.debug('Set channel "%d" to value "%d"' % (channel, off))
         self._write_byte_data(self._LED0_ON_L+4*channel, on & 0xFF)
         self._write_byte_data(self._LED0_ON_H+4*channel, on >> 8)
         self._write_byte_data(self._LED0_OFF_L+4*channel, off & 0xFF)
@@ -225,7 +221,7 @@ class PWM(object):
 
     def write_all_value(self, on, off):
         '''Set on and off value on all channel'''
-        self._debug_('Set all channel to value "%d"' % (off))
+        logger.debug('Set all channel to value "%d"' % (off))
         self._write_byte_data(self._ALL_LED_ON_L, on & 0xFF)
         self._write_byte_data(self._ALL_LED_ON_H, on >> 8)
         self._write_byte_data(self._ALL_LED_OFF_L, off & 0xFF)
@@ -235,32 +231,15 @@ class PWM(object):
         '''To map the value from arange to another'''
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-    @property
-    def debug(self):
-        return self._DEBUG
-
-    @debug.setter
-    def debug(self, debug):
-        '''Set if debug information shows'''
-        if debug in (True, False):
-            self._DEBUG = debug
-        else:
-            raise ValueError('debug must be "True" (Set debug on) or "False" (Set debug off), not "{0}"'.format(debug))
-
-        if self._DEBUG:
-            print(self._DEBUG_INFO, "Set debug on")
-        else:
-            print(self._DEBUG_INFO, "Set debug off")
-
 
 if __name__ == '__main__':
     pwm = PWM()
     pwm.frequency = 60
     for i in range(16):
         time.sleep(0.5)
-        print('\nChannel %d\n' % i)
+        logger.info('\nChannel %d\n' % i)
         time.sleep(0.5)
         for j in range(4096):
             pwm.write(i, 0, j)
-            print('PWM value: %d' % j)
+            logger.info('PWM value: %d' % j)
             time.sleep(0.0003)

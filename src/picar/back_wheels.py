@@ -13,27 +13,30 @@ logger = logging.getLogger(__name__)
 
 class Back_Wheels(object):
     ''' Back wheels control class '''
+    # Direction channels
     Motor_A = 17
     Motor_B = 27
 
+    # PWM channels
     PWM_A = 4
     PWM_B = 5
 
-    _DEBUG = False
-    _DEBUG_INFO = 'DEBUG "back_wheels.py":'
-
-    def __init__(self, config, debug=False, bus_number=1):
+    def __init__(self, config_file, bus_number=1):
         ''' Init the direction channel and pwm channel '''
-        with open(config) as f:
+
+        logger.info("Initializing back wheels with bus number: {0}, config_file: {1}".format( 
+                    str(bus_number), str(config_file)))
+        
+        with open(config_file) as f:
             self.config = json.load(f)
 
-        self.debug = debug
         self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.config["left_polarity_correction"])
         self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.config["right_polarity_correction"])
         self.pwm = PCA9685.PWM(bus_number=bus_number)
-        self.left_wheel.debug = debug
-        self.right_wheel.debug = debug
-        self.pwm.debug = debug
+
+        self.left_wheel.debug = self.config['debug_state']
+        self.right_wheel.debug = self.config['debug_state']
+        self.pwm.debug = self.config['debug_state']
 
         def _set_a_pwm(value):
             pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
@@ -48,28 +51,23 @@ class Back_Wheels(object):
 
         self._speed = 0
 
-
-    def _debug_(self, message):
-        if self.debug:
-            logger.info(message)
-
     def forward(self):
         ''' Move both wheels forward '''
         self.left_wheel.forward()
         self.right_wheel.forward()
-        self._debug_('Running forward')
+        logger.debug('Run dc motors forward')
 
     def backward(self):
         ''' Move both wheels backward '''
         self.left_wheel.backward()
         self.right_wheel.backward()
-        self._debug_('Running backward')
+        logger.debug('Run dc motors backward')
 
     def stop(self):
         ''' Stop both wheels '''
         self.left_wheel.stop()
         self.right_wheel.stop()
-        self._debug_('Stop')
+        logger.debug('Stop')
 
     @property
     def speed(self, speed):
@@ -81,14 +79,16 @@ class Back_Wheels(object):
         ''' Set moving speeds '''
         self.left_wheel.speed = self._speed
         self.right_wheel.speed = self._speed
-        self._debug_('Set speed to %s' % self._speed)
+        logger.debug('Set speed to %s' % self._speed)
 
     def calibrate_left_polarity(self):
         ''' Reverse the left wheels forward direction in calibration '''
+        
         self.config["left_polarity_correction"] = not self.config["left_polarity_correction"]
         self.left_wheel.offset = self.config["left_polarity_correction"]
         with open(config, 'w') as outfile:
             json.dump(self.config, outfile)
+        logger.info("Left wheel polarity correction set to {0}".format(self.config["left_polarity_correction"]))
 
     def calibrate_right_polarity(self):
         ''' Reverse the right wheels forward direction in calibration '''
@@ -96,6 +96,7 @@ class Back_Wheels(object):
         self.right_wheel.offset = self.config["right_polarity_correction"]
         with open(config, 'w') as outfile:
             json.dump(self.config, outfile)
+        logger.info("Right wheel polarity correction set to {0}".format(self.config["right_polarity_correction"]))
 
 
 if __name__ == '__main__':

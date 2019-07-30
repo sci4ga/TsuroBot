@@ -9,19 +9,21 @@ import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-# Configure logger directory and rotation, output format, and level
-logfile = ".././logs/tsuro.log"
+with open('config.json') as f:
+    config = json.load(f)
+# Configure log level available to handlers
 logging.basicConfig(level=logging.DEBUG)
+# Configure log handler output directory, rotation, output format
+logfile = ".././logs/tsuro.log"
 handler = TimedRotatingFileHandler(logfile, when="midnight", backupCount=30)
 handler.setFormatter(logging.Formatter('%(levelname)s:%(asctime)s:%(message)s'))
-handler.setLevel(logging.DEBUG)
+# Configure log level for file output of log handler
+if config['debug_state']:
+    handler.setLevel(logging.DEBUG)
+else:
+    handler.setLevel(logging.INFO)
 logging.getLogger('').addHandler(handler)
 logger = logging.getLogger(__name__)
-
-with open('config.json') as f:
-    envconfig = json.load(f)
-if not envconfig['debug_enabled']:
-    logger.setLevel(logging.INFO)
 
 app = connexion.App(__name__, specification_dir='./')
 app.add_api('api.yml')
