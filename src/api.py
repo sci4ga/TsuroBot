@@ -64,6 +64,21 @@ def put_git_pull(branch_name):
 
     return make_response(response_message, 200)
 
+def post_flip_polarity_left_wheel():
+    """
+    This function responds to a request for /flip_polarity_left_wheel/
+    with a '200' upon successful configuration
+    """
+    tsurobot.back_wheels.calibrate_left_polarity()
+    return make_response('Tsurobot left wheel polarity flipped', 200)
+
+def post_flip_polarity_right_wheel():
+    """
+    This function responds to a request for /flip_polarity_left_wheel/
+    with a '200' upon successful configuration
+    """
+    tsurobot.back_wheels.calibrate_right_polarity()
+    return make_response('Tsurobot right wheel polarity flipped', 200)
 
 def post_test_back_wheels():
     """
@@ -83,6 +98,17 @@ def post_test_back_wheels():
 
     return make_response('Tsurobot back wheel test complete', 200)
 
+def post_turning_offset(offset):
+    """
+    This function responds to a request for /turning_offset/
+    with a '200' upon successfull adjustment
+    """
+    for _x in range(abs(offset)):
+        if offset > 0:
+            tsurobot.front_wheels.calibrate_left()
+        if offset < 0:
+            tsurobot.front_wheels.calibrate_right
+    return make_response('Tsurobot front wheel calibration complete. Offset is {0}'.format(str(tsurobot.front_wheels.turning_offset)), 200)
 
 def post_test_front_wheels():
     """

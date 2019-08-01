@@ -1,10 +1,1 @@
-{
-    "git_repo": "https://github.com/sci4ga/RobotTsuro.git",
-    "debug_enabled": true,
-    "turning_offset": -21,
-    "pan_offset": -23,
-    "tilt_offset": 18,
-    "left_polarity_correction": false,
-    "right_polarity_correction": false,
-    "debug_state": false
-}
+{"git_repo": "https://github.com/sci4ga/RobotTsuro.git", "debug_enabled": true, "turning_offset": -89, "pan_offset": -23, "tilt_offset": 18, "left_polarity_correction": false, "right_polarity_correction": false, "debug_state": true, "config_file": "config.json", "log_file": ".././logs/tsuro.log", "log_backups": 30, "log_rotation": "midnight", "port": 4800, "host": "0.0.0.0", "api_yml": "api.yml", "template": "index.html"}

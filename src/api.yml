@@ -19,6 +19,26 @@ paths:
       responses:
         '200':
           description: Success
+  /flip_polarity_right_wheel:
+    post:
+      operationId: api.post_flip_polarity_right_wheel
+      tags:
+        - dev
+      summary: Flip right wheel polarity
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /flip_polarity_left_wheel:
+    post:
+      operationId: api.post_flip_polarity_left_wheel
+      tags:
+        - dev
+      summary: Flip left wheel polarity
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
   /test_back_wheels:
     post:
       operationId: api.post_test_back_wheels
@@ -26,6 +46,28 @@ paths:
         - dev
       summary: Test communication
       description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /turning_offset:
+    post:
+      operationId: api.post_turning_offset
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      parameters:
+      - name: offset
+        in: query
+        description: Amount to offset steering
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      tags:
+        - dev
       responses:
         '200':
           description: Success
