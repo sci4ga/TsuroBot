@@ -13,13 +13,6 @@ logger = logging.getLogger(__name__)
 
 class Back_Wheels(object):
     ''' Back wheels control class '''
-    # Direction channels
-    Motor_A = 17
-    Motor_B = 27
-
-    # PWM channels
-    PWM_A = 4
-    PWM_B = 5
 
     def __init__(self, config_file, bus_number=1):
         ''' Init the direction channel and pwm channel '''
@@ -30,18 +23,19 @@ class Back_Wheels(object):
         with open(config_file) as f:
             self.config = json.load(f)
 
-        self.left_wheel = TB6612.Motor(self.Motor_A, offset=self.config["left_polarity_correction"])
-        self.right_wheel = TB6612.Motor(self.Motor_B, offset=self.config["right_polarity_correction"])
+        self.left_wheel = TB6612.Motor(self.config["left_motor_direction_channel"], offset=self.config["left_polarity_correction"])
+        self.right_wheel = TB6612.Motor(self.config["right_motor_direction_channel"], offset=self.config["right_polarity_correction"])
         self.pwm = PCA9685.PWM(bus_number=bus_number)
         self.pwm.setup()
 
+        # Map 0-100% pulse width modulation on wheels to 7-bit binary output
         def _set_a_pwm(value):
             pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
-            self.pwm.write(self.PWM_A, 0, pulse_wide)
+            self.pwm.write(self.config["left_motor_pwm_channel"], 0, pulse_wide)
 
         def _set_b_pwm(value):
             pulse_wide = int(self.pwm.map(value, 0, 100, 0, 4095))
-            self.pwm.write(self.PWM_B, 0, pulse_wide)
+            self.pwm.write(self.config["right_motor_pwm_channel"], 0, pulse_wide)
 
         self.left_wheel.pwm = _set_a_pwm
         self.right_wheel.pwm = _set_b_pwm
@@ -83,20 +77,14 @@ class Back_Wheels(object):
         
         self.config["left_polarity_correction"] = not self.config["left_polarity_correction"]
         self.left_wheel.offset = self.config["left_polarity_correction"]
-        self.save_config()
         logger.info("Left wheel polarity correction set to {0}".format(self.config["left_polarity_correction"]))
 
     def calibrate_right_polarity(self):
         ''' Reverse the right wheels forward direction in calibration '''
         self.config["right_polarity_correction"] = not self.config["right_polarity_correction"]
         self.right_wheel.offset = self.config["right_polarity_correction"]
-        self.save_config()
         logger.info("Right wheel polarity correction set to {0}".format(self.config["right_polarity_correction"]))
     
     def save_config(self):
-        with open(config, 'w') as outfile:
+        with open(self.config["config_file"], 'w') as outfile:
             json.dump(self.config, outfile)
-
-
-if __name__ == '__main__':
-    test()

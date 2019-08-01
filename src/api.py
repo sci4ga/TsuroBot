@@ -32,10 +32,12 @@ def get_info():
 
     packages_list = [d.project_name + "==" + pkg_resources.get_distribution(d.project_name).version
                      for d in pkg_resources.working_set]
-
+    
+    with open(config_file) as f:
+        config = json.load(f)
     other = socket.gethostname() + " - " + platform.platform()
 
-    return {'packages': packages_list, 'other': other}
+    return {'packages': packages_list, 'other': other, 'config':config}
 
 
 def get_ack():
@@ -70,6 +72,7 @@ def post_flip_polarity_left_wheel():
     with a '200' upon successful configuration
     """
     tsurobot.back_wheels.calibrate_left_polarity()
+    tsurobot.back_wheels.save_config()
     return make_response('Tsurobot left wheel polarity flipped', 200)
 
 def post_flip_polarity_right_wheel():
@@ -78,6 +81,7 @@ def post_flip_polarity_right_wheel():
     with a '200' upon successful configuration
     """
     tsurobot.back_wheels.calibrate_right_polarity()
+    tsurobot.back_wheels.save_config()
     return make_response('Tsurobot right wheel polarity flipped', 200)
 
 def post_test_back_wheels():
@@ -108,6 +112,7 @@ def post_turning_offset(offset):
             tsurobot.front_wheels.calibrate_left()
         if offset < 0:
             tsurobot.front_wheels.calibrate_right
+    tsurobot.front_wheels.save_config()
     return make_response('Tsurobot front wheel calibration complete. Offset is {0}'.format(str(tsurobot.front_wheels.turning_offset)), 200)
 
 def post_test_front_wheels():

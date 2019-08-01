@@ -81,13 +81,11 @@ class Front_Wheels(object):
         ''' Calibrate the wheels to left '''
         self.turning_offset -= 1
         self.turn_straight()
-        self.save_config()
 
     def calibrate_right(self):
         ''' Calibrate the wheels to right '''
         self.turning_offset += 1
         self.turn_straight()
-        self.save_config()
 
     def save_config(self):
         with open(self.config["config_file"], 'w') as outfile:
