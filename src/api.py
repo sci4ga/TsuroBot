@@ -12,6 +12,7 @@ import platform
 import socket
 import git
 import time
+import json
 # local modules
 from tsuro.tsurobot import Tsurobot, play_game
 import logging
