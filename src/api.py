@@ -136,12 +136,14 @@ def post_test_vertical_view():
     This function responds to a request for /test_vertical_view/
     with a '200' upon successful startup
     """
-    start_state = tsurobot.get_state()
-    tsurobot.camera.tilt_up()
-    time.sleep(1)
-    tsurobot.camera.to_position(expect_tilt=start_state.tilt)
-    time.sleep(1)
+    # start_state = tsurobot.get_state()
+    # tsurobot.camera.tilt_up()
+    # time.sleep(1)
+    # tsurobot.camera.to_position(expect_tilt=start_state.tilt)
+    # time.sleep(1)
     tsurobot.camera.tilt_down()
+    time.sleep(1)
+    tsurobot.camera.tilt_up()
     return make_response('Tsurobot vertical view test complete', 200)
 
 
