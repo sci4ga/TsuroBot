@@ -46,38 +46,53 @@ class Camera(object):
         self.current_pan = 0
         self.current_tilt = 0
         self.ready()
+    
+    @property
+    def current_pan(self):
+        return self.__current_pan
+    
+    @current_pan.setter
+    def current_pan(self, val):
+        if val > 180:
+            val = 180
+        if val < 0:
+            val = 0
+        self.__current_pan = val
 
-    def safe_plus(self, variable, plus_value):
-        ''' Plus angle safely with no over ranges '''
-        variable += plus_value
-        if variable > 180:
-            variable = 180
-        if variable < 0:
-            variable = 0
-        return variable
+    @property
+    def current_tilt(self):
+        return self.__current_tilt
+    
+    @current_tilt.setter
+    def current_tilt(self, val):
+        if val > 180:
+            val = 180
+        if val < 0:
+            val = 0
+        self.__current_tilt = val
 
     def pan_left(self, step=PAN_STEP):
         ''' Control the pan servo to make the camera turning left '''
         logger.debug('Turn left at step: {0}'.format(str(step)))
-        self.current_pan = self.safe_plus(self.current_pan, step)
+        self.current_pan += step
         self.pan_servo.write(self.current_pan)
 
     def pan_right(self, step=PAN_STEP):
         ''' Control the pan servo to make the camera turning right '''
         logger.debug('Turn right at step: {0}'.format(str(step)))
-        self.current_pan = self.safe_plus(self.current_pan, -step)
+        self.current_pan += -step
         self.pan_servo.write(self.current_pan)
 
     def tilt_up(self, step=TILT_STEP):
         ''' Control the tilt servo to make the camera turning up '''
         logger.debug('Turn up at step: {0}'.format(str(step)))
-        self.current_tilt = self.safe_plus(self.current_tilt, step)
+        self.current_tilt += step
         self.tilt_servo.write(self.current_tilt)
 
     def tilt_down(self, step=TILT_STEP):
         '''Control the tilt servo to make the camera turning down'''
         logger.debug('Turn down at step: {0}'.format(str(step)))
-        self.current_tilt = self.safe_plus(self.current_tilt, -step)
+        self.current_tilt += -step
         self.tilt_servo.write(self.current_tilt)
 
     def to_position(self, expect_pan=None, expect_tilt=None):
@@ -97,16 +112,16 @@ class Camera(object):
                 tilt_diff = self.current_tilt - expect_tilt
                 if abs(pan_diff) > 1:
                     if pan_diff < 0:
-                        self.current_pan = self.safe_plus(self.current_pan, 1)
+                        self.current_pan += 1
                     elif pan_diff > 0:
-                        self.current_pan = self.safe_plus(self.current_pan, -1)
+                        self.current_pan += -1
                 else:
                     self.current_pan = expect_pan
                 if abs(tilt_diff) > 1:
                     if tilt_diff < 0:
-                        self.current_tilt = self.safe_plus(self.current_tilt, 1)
+                        self.current_tilt += 1
                     elif tilt_diff > 0:
-                        self.current_tilt = self.safe_plus(self.current_tilt, -1)
+                        self.current_tilt += -1
                 else:
                     self.current_tilt = expect_tilt
 
