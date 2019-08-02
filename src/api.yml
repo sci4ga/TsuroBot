@@ -89,6 +89,26 @@ paths:
       responses:
         '200':
           description: Success
+  /calibrate_tilt:
+    post:
+      operationId: api.post_calibrate_tilt
+      tags:
+        - dev
+      summary: Calibrate camera tilt
+      description: Returns 200
+      parameters:
+      - name: offset
+        in: query
+        description: Amount to offset tilt (positive is up)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Success
   /test_horizontal_view:
     post:
       operationId: api.post_test_horizontal_view
@@ -96,6 +116,55 @@ paths:
         - dev
       summary: Test communication
       description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /calibrate_pan:
+    post:
+      operationId: api.post_calibrate_pan
+      tags:
+        - dev
+      summary: Calibrate camera pan
+      description: Returns 200
+      parameters:
+      - name: offset
+        in: query
+        description: Amount to offset pan (positive is right)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Success
+  /look_at:
+    post:
+      operationId: api.post_look_at
+      tags:
+        - dev
+      summary: Pan/tilt camera to target position
+      description: Returns 200
+      parameters:
+      - name: pan
+        in: query
+        description: pan position (0-180)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: tilt
+        in: query
+        description: tilt position (0-180)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
       responses:
         '200':
           description: Success

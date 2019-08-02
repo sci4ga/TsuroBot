@@ -134,27 +134,59 @@ def post_test_front_wheels():
 def post_test_vertical_view():
     """
     This function responds to a request for /test_vertical_view/
-    with a '200' upon successful startup
+    with a '200' upon success
     """
-    # start_state = tsurobot.get_state()
-    # tsurobot.camera.tilt_up()
-    # time.sleep(1)
-    # tsurobot.camera.to_position(expect_tilt=start_state.tilt)
-    # time.sleep(1)
-    tsurobot.camera.tilt_down()
+    tsurobot.camera.look_center()
     time.sleep(1)
-    tsurobot.camera.tilt_up()
+    tsurobot.camera.look_at(target_tilt=0)
+    time.sleep(1)
+    tsurobot.camera.look_center()
+    time.sleep(1)
+    tsurobot.camera.look_at(target_tilt=180)
+    time.sleep(1)
+    tsurobot.camera.look_center()
+    time.sleep(1)
     return make_response('Tsurobot vertical view test complete', 200)
 
+def post_look_at(pan, tilt):
+    """
+    This function responds to a request for /look_at/
+    with a '200' upon success
+    """
+    tsurobot.camera.look_at(target_pan=pan, target_tilt=tilt)
+    return make_response('Tsurobot is looking at target [{0}, {1}]'.format(pan, tilt), 200)
+
+def post_calibrate_pan(offset):
+    """
+    This function responds to a request for /calibrate_pan/
+    with a '200' upon success
+    """
+    tsurobot.camera.calibrate_pan(pan=offset)
+    return make_response('Tsurobot pan is offset to {0}'.format(tsurobot.camera.config["pan_offset"]), 200)
+
+def post_calibrate_tilt(offset):
+    """
+    This function responds to a request for /calibrate_pan/
+    with a '200' upon success
+    """
+    tsurobot.camera.calibrate_pan(tilt=offset)
+    return make_response('Tsurobot tilt is offset to {0}'.format(tsurobot.camera.config["tilt_offset"]), 200)
 
 def post_test_horizontal_view():
     """
     This function responds to a request for /test_horizontal_view/
-    with a '200' upon successful startup
+    with a '200' upon success
     """
-    tsurobot.camera.pan_left()
+    tsurobot.camera.look_center()
     time.sleep(1)
-    tsurobot.camera.pan_right()
+    tsurobot.camera.look_at(target_pan=0)
+    time.sleep(1)
+    tsurobot.camera.look_center()
+    time.sleep(1)
+    tsurobot.camera.look_at(target_pan=180)
+    time.sleep(1)
+    tsurobot.camera.look_center()
+    time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 
 
