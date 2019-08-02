@@ -29,10 +29,10 @@ class Camera(object):
     PAN_STEP = 15                # Pan step = 5 degree
     TILT_STEP = 10            # Tilt step = 5 degree
 
-    def __init__(self, bus_number=1, config="config.json"):
+    def __init__(self, config_file, bus_number=1):
         ''' Init the servo channel '''
-        logger.info("Initializing Camera with bus_number: {0}, config: {1}".format(str(bus_number), str(config)))
-        with open(config) as f:
+        logger.info("Initializing Camera with bus_number: {0}, config: {1}".format(str(bus_number), str(config_file)))
+        with open(config_file) as f:
             self.config = json.load(f)
 
         self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
@@ -80,8 +80,14 @@ class Camera(object):
         self.current_tilt = self.safe_plus(self.current_tilt, -step)
         self.tilt_servo.write(self.current_tilt)
 
-    def to_position(self, expect_pan, expect_tilt):
+    def to_position(self, expect_pan=None, expect_tilt=None):
+
         '''Control two servo to write the camera to ready position'''
+        if expect_pan is None:
+            expect_pan = self.current_pan
+        if expect_tilt is None:
+            expect_tilt = self.current_tilt
+
         pan_diff = self.current_pan - expect_pan
         tilt_diff = self.current_tilt - expect_tilt
         logger.debug('Turn to posision [%s, %s] (pan, tilt)' % (expect_pan, expect_tilt))
