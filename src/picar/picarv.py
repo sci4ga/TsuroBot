@@ -1,6 +1,6 @@
 # import native modules
 # local imports
-from picar import front_wheels, back_wheels, camera, vision
+from picar import front_wheels, back_wheels, camera
 import logging
 
 logger = logging.getLogger(__name__)
@@ -11,7 +11,6 @@ class PicarV:
         self.front_wheels = front_wheels.Front_Wheels()
         self.back_wheels = back_wheels.Back_Wheels()
         self.camera = camera.Camera()
-        self.vision = vision.Vision()
         # TODO: add vertical view (tilt)
         # TODO: add horizontal view (pan)
 
