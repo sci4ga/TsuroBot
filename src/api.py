@@ -153,6 +153,9 @@ def post_test_horizontal_view():
     with a '200' upon successful startup
     """
     raise NotImplementedError
+    tsurobot.camera.pan_left()
+    time.sleep(1)
+    tsurobot.camera.pan_right()
     return make_response('Tsurobot horizontal view test complete', 200)
 
 
