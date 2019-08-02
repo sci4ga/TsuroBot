@@ -162,6 +162,7 @@ def post_calibrate_pan(offset):
     with a '200' upon success
     """
     tsurobot.camera.calibrate_pan(pan=offset)
+    tsurobot.camera.save_calibration()
     return make_response('Tsurobot pan is offset to {0}'.format(tsurobot.camera.config["pan_offset"]), 200)
 
 def post_calibrate_tilt(offset):
@@ -169,7 +170,8 @@ def post_calibrate_tilt(offset):
     This function responds to a request for /calibrate_pan/
     with a '200' upon success
     """
-    tsurobot.camera.calibrate_pan(tilt=offset)
+    tsurobot.camera.calibrate_tilt(tilt=offset)
+    tsurobot.camera.save_calibration()
     return make_response('Tsurobot tilt is offset to {0}'.format(tsurobot.camera.config["tilt_offset"]), 200)
 
 def post_test_horizontal_view():

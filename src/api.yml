@@ -129,7 +129,7 @@ paths:
       parameters:
       - name: offset
         in: query
-        description: Amount to offset pan (positive is right)
+        description: Amount to offset pan (positive is left)
         required: true
         style: form
         explode: true
@@ -155,7 +155,7 @@ paths:
         explode: true
         schema:
           type: integer
-          default: 0
+          default: 90
       - name: tilt
         in: query
         description: tilt position (0-180)
@@ -164,7 +164,7 @@ paths:
         explode: true
         schema:
           type: integer
-          default: 0
+          default: 90
       responses:
         '200':
           description: Success
