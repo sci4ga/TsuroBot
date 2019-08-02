@@ -32,7 +32,7 @@ def get_info():
 
     packages_list = [d.project_name + "==" + pkg_resources.get_distribution(d.project_name).version
                      for d in pkg_resources.working_set]
-    
+
     with open(config_file) as f:
         config = json.load(f)
     other = socket.gethostname() + " - " + platform.platform()
@@ -111,7 +111,7 @@ def post_turning_offset(offset):
         if offset > 0:
             tsurobot.front_wheels.calibrate_left()
         if offset < 0:
-            tsurobot.front_wheels.calibrate_right
+            tsurobot.front_wheels.calibrate_right()
     tsurobot.front_wheels.save_config()
     return make_response('Tsurobot front wheel calibration complete. Offset is {0}'.format(str(tsurobot.front_wheels.turning_offset)), 200)
 
@@ -129,7 +129,6 @@ def post_test_front_wheels():
     tsurobot.front_wheels.turn_straight()
 
     return make_response('Tsurobot front wheel test complete', 200)
-
 
 def post_test_vertical_view():
     """
