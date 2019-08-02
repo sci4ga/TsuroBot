@@ -11,7 +11,7 @@ class Tsurobot(picarv.PicarV):
     """
     def __init__(self, config_json="./config.json"):
         logger.info("Initializing Tsurobot with config: {0}".format(str(config_json)))
-        picarv.PicarV.__init__(self, config_json)
+        picarv.PicarV.__init__(self)
 
     def look_for_board(self):
         """

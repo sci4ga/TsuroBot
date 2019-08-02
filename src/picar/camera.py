@@ -99,13 +99,14 @@ class Camera(object):
             target_pan = self.pan
         if target_tilt is None:
             target_tilt = self.tilt
-        if target_pan < 0 or target_pan > 180 or target_tilt < 0 or target_tilt < 180:
-            raise ValueError("Pan and Tilt must be between 0 and 180.")
+        if target_pan < 0 or target_pan > 180 or target_tilt < 0 or target_tilt > 180:
+            raise ValueError("Pan and Tilt must be between 0 and 180. Found pan: {0}, tilt: {1}".format(target_pan, target_tilt))
+        logger.debug('Move position from [{0}, {1}] (pan, tilt)'.format(self.pan, self.tilt))
         while self.pan != target_pan or self.tilt != target_tilt:
             if target_pan > self.pan:
                 self.pan += 1
             if target_pan < self.pan:
-                self.pan -+ 1
+                self.pan -= 1
             if target_tilt > self.tilt:
                 self.tilt += 1
             if target_tilt < self.tilt:
