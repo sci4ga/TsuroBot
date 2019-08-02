@@ -29,7 +29,7 @@ class Camera(object):
     PAN_STEP = 15                # Pan step = 5 degree
     TILT_STEP = 10            # Tilt step = 5 degree
 
-    def __init__(self, config_file, bus_number=1):
+    def __init__(self, config_file='./config_camera.json', bus_number=1):
         ''' Init the servo channel '''
         logger.info("Initializing Camera with bus_number: {0}, config: {1}".format(str(bus_number), str(config_file)))
         with open(config_file) as f:
@@ -46,13 +46,13 @@ class Camera(object):
         self.current_pan = 0
         self.current_tilt = 0
         self.ready()
-    
+
     @property
-    def current_pan(self):
+    def pan(self):
         return self.__current_pan
-    
-    @current_pan.setter
-    def current_pan(self, val):
+
+    @pan.setter
+    def pan(self, val):
         if val > 180:
             val = 180
         if val < 0:
@@ -60,11 +60,11 @@ class Camera(object):
         self.__current_pan = val
 
     @property
-    def current_tilt(self):
+    def tilt(self):
         return self.__current_tilt
-    
-    @current_tilt.setter
-    def current_tilt(self, val):
+
+    @tilt.setter
+    def tilt(self, val):
         if val > 180:
             val = 180
         if val < 0:
@@ -141,7 +141,7 @@ class Camera(object):
         self.pan_servo.write(self.current_pan)
         self.tilt_servo.write(self.current_tilt)
 
-    def calibration(self):
+    def calibrate(self):
         ''' Control two servo to write the camera to calibration position '''
         logger.debug('Turn to "Calibration" position')
         self.pan_servo.write(self.CALI_PAN)

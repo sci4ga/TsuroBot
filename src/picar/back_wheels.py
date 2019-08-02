@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 class Back_Wheels(object):
     ''' Back wheels control class '''
 
-    def __init__(self, config_file, bus_number=1):
+    def __init__(self, config_file="./config_wheels.json", bus_number=1):
         ''' Init the direction channel and pwm channel '''
 
-        logger.info("Initializing back wheels with bus number: {0}, config_file: {1}".format( 
+        logger.info("Initializing back wheels with bus number: {0}, config_file: {1}".format(
                     str(bus_number), str(config_file)))
-        
+
         with open(config_file) as f:
             self.config = json.load(f)
 
@@ -74,7 +74,7 @@ class Back_Wheels(object):
 
     def calibrate_left_polarity(self):
         ''' Reverse the left wheels forward direction in calibration '''
-        
+
         self.config["left_polarity_correction"] = not self.config["left_polarity_correction"]
         self.left_wheel.offset = self.config["left_polarity_correction"]
         logger.info("Left wheel polarity correction set to {0}".format(self.config["left_polarity_correction"]))
@@ -84,7 +84,7 @@ class Back_Wheels(object):
         self.config["right_polarity_correction"] = not self.config["right_polarity_correction"]
         self.right_wheel.offset = self.config["right_polarity_correction"]
         logger.info("Right wheel polarity correction set to {0}".format(self.config["right_polarity_correction"]))
-    
+
     def save_config(self):
         with open(self.config["config_file"], 'w') as outfile:
             json.dump(self.config, outfile)

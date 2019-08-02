@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 class Front_Wheels(object):
     ''' Front wheels control class '''
 
-    def __init__(self, config_file, bus_number=1, channel=0):
+    def __init__(self, config_file="./config_wheels.json", bus_number=1, channel=0):
         ''' setup channels and basic stuff '''
-        logger.info("Initializing front wheels with bus number: {0}, config_file: {1}, channel: {2}".format( 
+        logger.info("Initializing front wheels with bus number: {0}, config_file: {1}, channel: {2}".format(
                     str(bus_number), str(config_file), str(channel)))
         with open(config_file) as f:
             self.config = json.load(f)
