@@ -43,6 +43,8 @@ class Camera(object):
         logger.debug('Pan offset value: {0}'.format(str(self.config['pan_offset'])))
         logger.debug('Tilt offset value: {0}'.format(str(self.config['tilt_offset'])))
 
+        # TODO: shouldn't this be __current_pan = 0 or pan(0)?
+        # why are we rw from __current_pan some times, and current_pan others?
         self.current_pan = 0
         self.current_tilt = 0
         self.ready()

@@ -17,6 +17,7 @@ class PicarV:
 
     def get_state(self):
         return {
+            # TODO: update these to use the getters?
             "pan": self.camera.current_pan,
             "tilt": self.camera.current_tilt
         }
