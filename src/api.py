@@ -5,7 +5,7 @@ This is the test module and supports all the ReST actions for the
 
 # 3rd party modules
 import pkg_resources
-from flask import make_response
+from flask import make_response, send_file
 # native modules
 import logging
 import platform
@@ -13,6 +13,7 @@ import socket
 import git
 import time
 import json
+import os
 # local modules
 from tsuro.tsurobot import Tsurobot, play_game
 import logging
@@ -191,7 +192,7 @@ def post_test_horizontal_view():
     time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 
-def get_camera_still():
+def post_camera_still():
     """
     This function responds to a request for /test_front_wheels/
     with a '200' upon successful startup
@@ -199,6 +200,17 @@ def get_camera_still():
     tsurobot.camera.vision.grab_still()
 
     return make_response('Tsurobot still grabbed.', 200)
+
+def get_camera_still():
+    """
+    This function responds to a request for /test_front_wheels/
+    with a '200' upon successful startup
+    """
+    file_name = ".././temp/capture.jpg"
+    if os.path.isfile(file_name):
+        os.remove(file_name)
+    tsurobot.camera.vision.grab_still()
+    return send_file(file_name, mimetype='image/jpeg')
 
 def post_play_game(action):
     """
