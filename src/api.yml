@@ -168,6 +168,16 @@ paths:
       responses:
         '200':
           description: Success
+  /camera_still:
+    get:
+      operationId: api.get_camera_still
+      tags:
+        - dev
+      summary: Grabs a frame from camera
+      description: Returns 200
+      responses:
+        '200':
+          description: A JSON array of packages and versions
   /git:
     put:
       operationId: api.put_git_pull

@@ -62,7 +62,7 @@ def put_git_pull(branch_name):
     branch = repo.head.ref.name
     commit_id = str(repo.head.commit)
     commit_message = repo.head.commit.message
-    response_message = f'Successful git pull on {branch} for commit {commit_id}: {commit_message}'
+    response_message = 'Successful git pull on {0} for commit {1}: {2}'.format(branch, commit_id, commit_message)
     logging.info(response_message)
 
     return make_response(response_message, 200)
@@ -191,6 +191,14 @@ def post_test_horizontal_view():
     time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 
+def get_camera_still():
+    """
+    This function responds to a request for /test_front_wheels/
+    with a '200' upon successful startup
+    """
+    tsurobot.camera.vision.grab_still()
+
+    return make_response('Tsurobot still grabbed.', 200)
 
 def post_play_game(action):
     """
