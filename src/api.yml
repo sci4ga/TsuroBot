@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: PicarTsuro API
-  description: SunFounder PiCar-V Tsuro API
+  title: TsuroBot API
+  description: AlphaBot2 Tsuro API
   version: 0.0.1
 
 servers:

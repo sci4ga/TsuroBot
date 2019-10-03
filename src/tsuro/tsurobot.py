@@ -1,17 +1,17 @@
 # local imports
-from picar import picarv
+from alphabot import alphabot2
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class Tsurobot(picarv.PicarV):
+class Tsurobot(alphabot2.AlphaBot2):
     """
     There ain't no bot like a Tsurobot.
     """
     def __init__(self, config_json="./config.json"):
         logger.info("Initializing Tsurobot with config: {0}".format(str(config_json)))
-        picarv.PicarV.__init__(self)
+        alphabot2.AlphaBot2.__init__(self)
 
     def look_for_board(self):
         """

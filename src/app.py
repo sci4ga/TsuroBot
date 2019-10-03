@@ -1,5 +1,5 @@
 """
-Starts logging and the PicarTsuro app w/ API via connexion
+Entry point for TsuroBot application
 """
 # 3rd party modules
 import connexion
@@ -8,8 +8,8 @@ from flask import render_template
 import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
-
-with open('config.json') as f:
+config_file = './src/config.json'
+with open(config_file) as f:
     config = json.load(f)
 # Configure log level available to handlers
 logging.basicConfig(level=logging.DEBUG)
