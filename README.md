@@ -1,4 +1,23 @@
 # RobotTsuro
+# Required packages:
+
+sudo apt-get install rpi.gpio
+
+# OpenCV...
+# Easy setup...
+sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103
+sudo apt-get install libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
+sudo apt-get install libatlas-base-dev
+
+sudo pip3 install opencv-contrib-python
+
+# Hard setup...
+# Required packages:
+
+sudo apt-get install rpi.gpio
+sudo apt-get install ffmpeg
+sudo apt-get install python3-opencv
+sudo apt-get install libjpeg8-dev
 
 # TODO: add explanatory information
 To install opencv on raspberry pi, see:
