@@ -3,7 +3,7 @@
     "debug_enabled": true,
     "debug_state": true,
     "config_file": "config.json",
-    "log_file": "./logs/tsuro.log",
+    "log_file": ".././logs/tsuro.log",
     "log_backups": 30,
     "log_rotation": "midnight",
     "port": 4800,
