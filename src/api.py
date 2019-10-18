@@ -207,10 +207,11 @@ def get_camera_still():
     with a '200' upon successful startup
     """
     file_name = ".././temp/capture.jpg"
-    if os.path.isfile(file_name):
-        os.remove(file_name)
     tsurobot.camera.vision.grab_still()
-    return send_file(file_name, mimetype='image/jpeg')
+    try:
+        return send_file(file_name, mimetype='image/jpeg')
+    finally:
+        os.remove(file_name)
 
 def post_play_game(action):
     """
