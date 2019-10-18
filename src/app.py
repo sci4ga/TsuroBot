@@ -8,7 +8,7 @@ from flask import render_template
 import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
-config_file = './src/config.json'
+config_file = './config.json'
 with open(config_file) as f:
     config = json.load(f)
 # Configure log level available to handlers
