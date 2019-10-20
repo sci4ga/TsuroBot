@@ -8,6 +8,7 @@ import pkg_resources
 from flask import make_response, send_file
 # native modules
 import logging
+import datetime
 import platform
 import socket
 import git
@@ -197,7 +198,10 @@ def post_camera_still():
     This function responds to a request for /test_front_wheels/
     with a '200' upon successful startup
     """
+    file_path = ".././temp/capture.jpg"
     tsurobot.camera.vision.grab_still()
+    new_name = "capture_" + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    os.rename(file_path, ".././temp/" + new_name + ".jpg")
 
     return make_response('Tsurobot still grabbed.', 200)
 
