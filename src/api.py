@@ -25,6 +25,7 @@ config_file = "./config.json"
 tsurobot = Tsurobot(config_file)
 
 
+# TODO - remove commented functions from api.yml
 def get_info():
     """
     This function responds to a request for /info
@@ -52,6 +53,33 @@ def get_ack():
     return make_response('Tsuro ACK', 200)
 
 
+def post_test_led():
+    "cycle through colors for each LED"
+    response_message = "LED test success."
+    return make_response(response_message, 200)
+
+
+def get_front_ir():
+    "get signal for left and right front IR sensors"
+    # TODO
+    signal = {}
+    signal["left"] = 0
+    signal["right"] = 0
+    return signal
+
+
+def get_bottom_ir():
+    "get signal for bottom IR sensors"
+    # TODO
+    signal = {}
+    signal["left"] = 0
+    signal["center-left"] = 0
+    signal["center"] = 0
+    signal["center-right"] = 0
+    signal["right"] = 0
+    return signal
+
+
 def put_git_pull(branch_name):
     """
     This function responds to a request for /git and
@@ -69,75 +97,22 @@ def put_git_pull(branch_name):
 
     return make_response(response_message, 200)
 
-def post_flip_polarity_left_wheel():
-    """
-    This function responds to a request for /flip_polarity_left_wheel/
-    with a '200' upon successful configuration
-    """
-    tsurobot.back_wheels.calibrate_left_polarity()
-    tsurobot.back_wheels.save_config()
-    return make_response('Tsurobot left wheel polarity flipped', 200)
 
-def post_flip_polarity_right_wheel():
+def post_test_wheels():
     """
-    This function responds to a request for /flip_polarity_left_wheel/
-    with a '200' upon successful configuration
-    """
-    tsurobot.back_wheels.calibrate_right_polarity()
-    tsurobot.back_wheels.save_config()
-    return make_response('Tsurobot right wheel polarity flipped', 200)
-
-def post_test_back_wheels():
-    """
-    This function responds to a request for /test_back_wheels/
+    This function responds to a request for /test_wheels/
     with a '200' upon successful startup
     """
-    tsurobot.back_wheels.speed = 100
-    tsurobot.back_wheels.forward()
-    time.sleep(1)
-    tsurobot.back_wheels.speed = 20
-    time.sleep(1)
-    tsurobot.back_wheels.speed = 50
-    time.sleep(1)
-    tsurobot.back_wheels.speed = 100
-    time.sleep(1)
-    tsurobot.back_wheels.stop()
+    # TODO - adapt to alphabot
 
-    return make_response('Tsurobot back wheel test complete', 200)
-
-def post_turning_offset(offset):
-    """
-    This function responds to a request for /turning_offset/
-    with a '200' upon successfull adjustment
-    """
-    for _x in range(abs(offset)):
-        if offset > 0:
-            tsurobot.front_wheels.calibrate_left()
-        if offset < 0:
-            tsurobot.front_wheels.calibrate_right()
-    tsurobot.front_wheels.save_config()
-    return make_response('Tsurobot front wheel calibration complete. Offset is {0}'.format(str(tsurobot.front_wheels.turning_offset)), 200)
-
-def post_test_front_wheels():
-    """
-    This function responds to a request for /test_front_wheels/
-    with a '200' upon successful startup
-    """
-    tsurobot.front_wheels.turn_left()
-    time.sleep(1)
-    tsurobot.front_wheels.turn_straight()
-    time.sleep(1)
-    tsurobot.front_wheels.turn_right()
-    time.sleep(1)
-    tsurobot.front_wheels.turn_straight()
-
-    return make_response('Tsurobot front wheel test complete', 200)
+    return make_response('Tsurobot wheel test complete', 200)
 
 def post_test_vertical_view():
     """
     This function responds to a request for /test_vertical_view/
     with a '200' upon success
     """
+    # TODO - adapt to alphabot
     tsurobot.camera.look_center()
     time.sleep(1)
     tsurobot.camera.look_at(target_tilt=0)
@@ -155,6 +130,7 @@ def post_look_at(pan, tilt):
     This function responds to a request for /look_at/
     with a '200' upon success
     """
+    # TODO - adapt to alphabot
     tsurobot.camera.look_at(target_pan=pan, target_tilt=tilt)
     return make_response('Tsurobot is looking at target [{0}, {1}]'.format(pan, tilt), 200)
 
@@ -163,6 +139,7 @@ def post_calibrate_pan(offset):
     This function responds to a request for /calibrate_pan/
     with a '200' upon success
     """
+    # TODO - adapt to alphabot
     tsurobot.camera.calibrate_pan(pan=offset)
     tsurobot.camera.save_calibration()
     return make_response('Tsurobot pan is offset to {0}'.format(tsurobot.camera.config["pan_offset"]), 200)
@@ -172,6 +149,7 @@ def post_calibrate_tilt(offset):
     This function responds to a request for /calibrate_pan/
     with a '200' upon success
     """
+    # TODO - adapt to alphabot
     tsurobot.camera.calibrate_tilt(tilt=offset)
     tsurobot.camera.save_calibration()
     return make_response('Tsurobot tilt is offset to {0}'.format(tsurobot.camera.config["tilt_offset"]), 200)
@@ -181,6 +159,7 @@ def post_test_horizontal_view():
     This function responds to a request for /test_horizontal_view/
     with a '200' upon success
     """
+    # TODO - adapt to alphabot
     tsurobot.camera.look_center()
     time.sleep(1)
     tsurobot.camera.look_at(target_pan=0)
