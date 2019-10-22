@@ -19,6 +19,52 @@ paths:
       responses:
         '200':
           description: Success
+  /front_ir:
+    get:
+      operationId: api.get_front_ir
+      tags:
+        - dev
+      summary: Get front ir measurement
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  properties: 
+                    left: 
+                      type: integer
+                    right:
+                      type: integer
+  /bottom_ir:
+    get:
+      operationId: api.get_bottom_ir
+      tags:
+        - dev
+      summary: Get bottom ir measurement
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  properties: 
+                    left: 
+                      type: integer
+                    center-left:
+                      type: integer
+                    center: 
+                      type: integer
+                    center-right:
+                      type: integer
+                    right:
+                      type: integer
   /test_wheels:
     post:
       operationId: api.post_test_wheels
