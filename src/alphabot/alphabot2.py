@@ -1,6 +1,8 @@
 # import native modules
 # local imports
 from alphabot import camera
+from alphabot import steering
+import RPi.GPIO as GPIO
 # from alphabot import front_wheels, back_wheels, camera
 import logging
 
@@ -9,11 +11,12 @@ logger = logging.getLogger(__name__)
 class AlphaBot2:
     def __init__(self):
         logger.info("Initializing AlphaBot2")
-        # self.front_wheels = front_wheels.Front_Wheels()
-        # self.back_wheels = back_wheels.Back_Wheels()
+        GPIO.cleanup()
+        self.steering = steering.Steering()
         self.camera = camera.Camera()
-        # TODO: add vertical view (tilt)
-        # TODO: add horizontal view (pan)
+        # TODO: add bottom ir
+        # TODO: add front ir
+
 
 """    def get_state(self):
         return {

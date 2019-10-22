@@ -19,6 +19,7 @@ class Camera(object):
         logger.info("Initializing Camera with bus_number: {0}, config: {1}".format(str(bus_number), str(config_file)))
         with open(config_file) as f:
             self.config = json.load(f)
+        # TODO: adapt the servos to alphabot 
         # self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
         # self.tilt_servo = Servo(self.config["cam_servo_tilt_channel"], bus_number=bus_number, offset=self.config['tilt_offset'])
         self.vision = Vision(config_file = config_file)
