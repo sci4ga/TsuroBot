@@ -2,7 +2,9 @@
 A module to actuate the wheel servo via TB6612FNG
 '''
 import RPi.GPIO as GPIO
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Wheel(object):
 
@@ -12,15 +14,14 @@ class Wheel(object):
         self.rev_pin = rev_pin
         self.pwm_pin = pwm_pin
         self.freq = 500
-
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(self.fwd_pin,GPIO.OUT)
         GPIO.setup(self.rev_pin,GPIO.OUT)
         GPIO.setup(self.pwm_pin,GPIO.OUT)
-        self.PWM = GPIO.PWM(self.pwm_pin, self.freq)
-        self.PWM.start(0)
-        self.pw  = 0
+        self.pwm = GPIO.PWM(self.pwm_pin, 500)
+        self.pwm.start(0)
+        self.pw = 0
 
 
     @property
@@ -34,13 +35,13 @@ class Wheel(object):
         if((pw_val > 0) and (pw_val <= 100)):
             GPIO.output(self.fwd_pin, GPIO.HIGH)
             GPIO.output(self.rev_pin, GPIO.LOW)
-            self.PWM.ChangeDutyCycle(pw_val)
+            self.pwm.ChangeDutyCycle(pw_val)
         elif((pw_val < 0) and (pw_val >= -100)):
             GPIO.output(self.fwd_pin, GPIO.LOW)
             GPIO.output(self.rev_pin, GPIO.HIGH)
-            self.PWM.ChangeDutyCycle(0 - pw_val)
+            self.pwm.ChangeDutyCycle(0 - pw_val)
         elif(pw_val == 0):
             GPIO.output(self.fwd_pin, GPIO.LOW)
             GPIO.output(self.rev_pin, GPIO.LOW)
-            self.PWM.ChangeDutyCycle(0)
+            self.pwm.ChangeDutyCycle(0)
 
