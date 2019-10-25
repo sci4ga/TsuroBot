@@ -5,7 +5,7 @@
 # various animations on a strip of NeoPixels.
 import time
 
-from rpi_ws281x import Adafruit_NeoPixel, Color
+from rpi_ws281x import Adafruit_NeoPixel, Color, ws
 
 # LED strip configuration:
 LED_COUNT      = 4      # Number of LED pixels.
