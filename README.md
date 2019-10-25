@@ -11,7 +11,7 @@ sudo apt-get install libatlas-base-dev
 
 sudo pip3 install opencv-contrib-python
 
-# enable the camera and the I2C interface
+# enable the camera and the I2C interface and SPI
 sudo raspi-config
 
 # NOTES
