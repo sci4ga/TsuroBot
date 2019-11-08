@@ -192,17 +192,10 @@ paths:
       operationId: api.post_camera_burst
       tags:
         - dev
-      summary: Grabs many frames from the camera in a quick burst and returns them in response
+      summary: Grabs many frames from the camera in a quick burst and saves them to the raspberry pi
       responses:
         '200':
-          description: captures.json
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: binary
+          description: Create capture.jpg
   /git:
     put:
       operationId: api.put_git_pull
