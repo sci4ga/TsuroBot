@@ -203,9 +203,8 @@ def post_camera_burst():
     with a list of photos upon successful capture of a burst of photos
     """
     logging.info(f"start: {datetime.datetime.now()}")
-    for i in range(5):
-        file_path = f".././temp/capture{i}.jpg"
-        tsurobot.camera.vision.grab_still(file_path)
+    for i in range(60):
+        tsurobot.camera.vision.grab_still_mem()
         logging.info(f"capture {i}: {datetime.datetime.now()}")
     logging.info(f"end: {datetime.datetime.now()}")
     return make_response('Burst finished', 200)
