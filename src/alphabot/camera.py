@@ -4,6 +4,7 @@ A module to pan/tilt the camera and access the camera sensor
 '''
 
 from driver_camera.vision import Vision
+from driver_servo_motor.servo import Servo
 import time
 import json
 import logging
@@ -19,8 +20,8 @@ class Camera(object):
         with open(config_file) as f:
             self.config = json.load(f)
         # TODO: adapt the servos to alphabot 
-        # self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
-        # self.tilt_servo = Servo(self.config["cam_servo_tilt_channel"], bus_number=bus_number, offset=self.config['tilt_offset'])
+        self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
+        self.tilt_servo = Servo(self.config["cam_servo_tilt_channel"], bus_number=bus_number, offset=self.config['tilt_offset'])
         self.vision = Vision(config_file = config_file)
 
         logger.debug('Pan servo channel: {0}'.format(str(self.config["cam_servo_pan_channel"])))
@@ -28,11 +29,11 @@ class Camera(object):
         logger.debug('Pan offset value: {0}'.format(str(self.config['pan_offset'])))
         logger.debug('Tilt offset value: {0}'.format(str(self.config['tilt_offset'])))
 
-"""        self.pan_servo.offset = self.config['pan_offset']
+        self.pan_servo.offset = self.config['pan_offset']
         self.tilt_servo.offset = self.config['tilt_offset']
         self.pan = self.config["center_pan"]
-        self.tilt = self.config["center_tilt"]"""
-"""
+        self.tilt = self.config["center_tilt"]
+
     @property
     def pan(self):
         return self.__pan
@@ -105,5 +106,5 @@ class Camera(object):
     def save_calibration(self):
         ''' Save the calibration value '''
         with open(self.config["config_file"], 'w') as outfile:
-            json.dump(self.config, outfile)"""
+            json.dump(self.config, outfile)
 
