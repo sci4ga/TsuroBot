@@ -187,22 +187,22 @@ paths:
               schema:
                 type: string
                 format: binary
-    /camera_burst:
-      get:
-        operationId: api.get_camera_burst
-        tags:
-          - dev
-        summary: Grabs many frames from the camera in a quick burst and returns them in response
-        responses:
-          '200':
-            description: captures.json
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+  /camera_burst:
+    get:
+      operationId: api.get_camera_burst
+      tags:
+        - dev
+      summary: Grabs many frames from the camera in a quick burst and returns them in response
+      responses:
+        '200':
+          description: captures.json
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: binary
   /git:
     put:
       operationId: api.put_git_pull
