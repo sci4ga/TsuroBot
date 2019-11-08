@@ -104,6 +104,7 @@ def post_test_wheels():
     with a '200' upon successful startup
     """
     # TODO - adapt to alphabot
+    tsurobot.steering.test()
 
     return make_response('Tsurobot wheel test complete', 200)
 
