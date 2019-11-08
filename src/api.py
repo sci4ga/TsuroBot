@@ -197,6 +197,20 @@ def get_camera_still():
     finally:
         os.remove(file_name)
 
+def get_camera_burst():
+    """
+    This function responds to a request for /get_camera_burst/
+    with a list of photos upon successful capture of a burst of photos
+    """
+    def getImage(i):
+        file_name = f".././temp/capture{i}.jpg"
+        try:
+            tsurobot.camera.vision.grab_still(file_name)
+            return send_file(file_name, mimetype='')
+        finally:
+            os.remove(file_name)
+    return map(getImage, range(60))
+
 def post_play_game(action):
     """
     This function responds to a request for /tsuro/launch_game
