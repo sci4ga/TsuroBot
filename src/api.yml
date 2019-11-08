@@ -188,8 +188,8 @@ paths:
                 type: string
                 format: binary
   /camera_burst:
-    get:
-      operationId: api.get_camera_burst
+    post:
+      operationId: api.post_camera_burst
       tags:
         - dev
       summary: Grabs many frames from the camera in a quick burst and returns them in response
