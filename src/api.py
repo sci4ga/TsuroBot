@@ -202,13 +202,12 @@ def post_camera_burst():
     This function responds to a request for /get_camera_burst/
     with a list of photos upon successful capture of a burst of photos
     """
-    def getImage(i):
+    for i in range(5):
         file_path = f".././temp/capture{i}.jpg"
         tsurobot.camera.vision.grab_still(file_path)
         new_name = f"capture{i}_" + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         os.rename(file_path, ".././temp/" + new_name + ".jpg")
         time.sleep(1)
-    map(getImage, range(5))
     return make_response('Burst finished', 200)
 
 def post_play_game(action):
