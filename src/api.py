@@ -206,9 +206,6 @@ def post_camera_burst():
     for i in range(5):
         file_path = f".././temp/capture{i}.jpg"
         tsurobot.camera.vision.grab_still(file_path)
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        new_name = f"capture{i}_{timestamp}"
-        os.rename(file_path, ".././temp/" + new_name + ".jpg")
         logging.info(f"capture {i}: {datetime.datetime.now()}")
     logging.info(f"end: {datetime.datetime.now()}")
     return make_response('Burst finished', 200)
