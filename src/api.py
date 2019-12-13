@@ -114,14 +114,19 @@ def post_test_vertical_view():
     with a '200' upon success
     """
     # TODO - adapt to alphabot
+    logger.info("tilt to 0")
     tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
+    logger.info("tilt to 100")
     tsurobot.camera.servos.tilt_absolute(100)
     time.sleep(1)
+    logger.info("tilt to 0")
     tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
+    logger.info("tilt to -100")
     tsurobot.camera.servos.tilt_absolute(-100)
     time.sleep(1)
+    logger.info("tilt to 0")
     tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
     return make_response('Tsurobot vertical view test complete', 200)
@@ -161,15 +166,20 @@ def post_test_horizontal_view():
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_pan=0)
+    logger.info("pan to -100")
+    tsurobot.camera.servos.pan_absolute(-100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_pan=180)
+    logger.info("pan to 100")
+    tsurobot.camera.servos.pan_absolute(100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 

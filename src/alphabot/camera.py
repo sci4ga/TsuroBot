@@ -23,6 +23,8 @@ class Camera(object):
         # self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
         # self.tilt_servo = Servo(self.config["cam_servo_tilt_channel"], bus_number=bus_number, offset=self.config['tilt_offset'])
         self.servos = Servo()
+        self.servos.tilt_absolute(0)
+        self.servos.pan_absolute(0)
         self.vision = Vision(config_file=config_file)
 
         """logger.debug('Pan servo channel: {0}'.format(str(self.config["cam_servo_pan_channel"])))

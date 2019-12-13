@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Servo(object):
     def __init__(self):
-        self.pwm = PCA9685(0x40)
+        self.pwm = PCA9685.PCA9685(0x40)
         self.pwm.setPWMFreq(50)
         #Set servo parameters
         self.pulse_min = 500
@@ -22,8 +22,8 @@ class Servo(object):
         self.HStep = 10      #Sets the initial step length
         self.VPulse = 1500  #Sets the initial Pulse
         self.VStep = 10      #Sets the initial step length
-        self.pwm.setServoPulse(1,self.VPulse)
-        self.pwm.setServoPulse(0,self.HPulse)
+        self.pwm.setServoPulse(1, int(self.VPulse))
+        self.pwm.setServoPulse(0, int(self.HPulse))
 
     def tilt_absolute(self, tilt):
         "tilt from -100 to 100"
@@ -36,10 +36,10 @@ class Servo(object):
             if self.VPulse < target_pulse:
                 self.VPulse += self.VStep
             elif self.VPulse > target_pulse:
-                self.VPulse += self.VStep            
+                self.VPulse -= self.VStep            
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
-            self.pwm.setServoPulse(1,self.VPulse)
+            self.pwm.setServoPulse(1, int(self.VPulse))
         return None
 
     def pan_absolute(self, pan):
@@ -55,10 +55,10 @@ class Servo(object):
             if self.HPulse < target_pulse:
                 self.HPulse += self.HStep
             elif self.HPulse > target_pulse:
-                self.HPulse += self.HStep
+                self.HPulse -= self.HStep
             if self.HStep >= (self.VPulse - target_pulse) >= (-1 * self.HStep):
                 self.HPulse = target_pulse
-            self.pwm.setServoPulse(0, self.HPulse)
+            self.pwm.setServoPulse(0, int(self.HPulse))
         return None
 
     def set_tilt_center(self, tilt_center):
@@ -90,10 +90,10 @@ class Servo(object):
             if self.VPulse < target_pulse:
                 self.VPulse += self.VStep
             elif self.VPulse > target_pulse:
-                self.VPulse += self.VStep          
+                self.VPulse -= self.VStep          
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
-            self.pwm.setServoPulse(0, self.VPulse) 
+            self.pwm.setServoPulse(0, int(self.VPulse))
         return None
 
     def pan_relative(self, pan):
@@ -111,8 +111,8 @@ class Servo(object):
             if self.HPulse < target_pulse:
                 self.HPulse += self.HStep
             elif self.HPulse > target_pulse:
-                self.HPulse += self.HStep
+                self.HPulse -= self.HStep
             if self.HStep >= (self.HPulse - target_pulse) >= (-1 * self.HStep):
                 self.HPulse = target_pulse
-            self.pwm.setServoPulse(0,self.HPulse) 
+            self.pwm.setServoPulse(0, int(self.HPulse))
         return None

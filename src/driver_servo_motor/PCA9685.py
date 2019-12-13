@@ -3,10 +3,14 @@
 import time
 import math
 import smbus
+import logging
+
 
 # ============================================================================
 # Raspi PCA9685 16-Channel PWM Servo Driver
 # ============================================================================
+
+logger = logging.getLogger(__name__)
 
 class PCA9685:
 
@@ -78,8 +82,8 @@ class PCA9685:
 	  
   def setServoPulse(self, channel, pulse):
     "Sets the Servo Pulse,The PWM frequency must be 50HZ"
-    pulse = pulse*4096/20000        #PWM frequency is 50HZ,the period is 20000us
-    self.setPWM(channel, 0, pulse)
+    pulse = int(pulse*4096/20000)       #PWM frequency is 50HZ,the period is 20000us
+    self.setPWM(int(channel), 0, pulse)
 
 if __name__=='__main__':
  
