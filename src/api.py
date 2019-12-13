@@ -114,15 +114,15 @@ def post_test_vertical_view():
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_center()
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_tilt=0)
+    tsurobot.camera.servos.tilt_absolute(100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_tilt=180)
+    tsurobot.camera.servos.tilt_absolute(-100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
     return make_response('Tsurobot vertical view test complete', 200)
 
