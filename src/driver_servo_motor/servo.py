@@ -5,6 +5,7 @@ Driver module for servo, with PCA9685
 
 from . import PCA9685
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +20,9 @@ class Servo(object):
         self.v_offset = 0
         self.h_offset = 0
         self.HPulse = 1500  #Sets the initial Pulse
-        self.HStep = 10      #Sets the initial step length
+        self.HStep = 5      #Sets the initial step length
         self.VPulse = 1500  #Sets the initial Pulse
-        self.VStep = 10      #Sets the initial step length
+        self.VStep = 5      #Sets the initial step length
         self.pwm.setServoPulse(1, int(self.VPulse))
         self.pwm.setServoPulse(0, int(self.HPulse))
 
@@ -40,6 +41,7 @@ class Servo(object):
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
             self.pwm.setServoPulse(1, int(self.VPulse))
+            time.sleep(0.01)
         return None
 
     def pan_absolute(self, pan):
@@ -56,9 +58,10 @@ class Servo(object):
                 self.HPulse += self.HStep
             elif self.HPulse > target_pulse:
                 self.HPulse -= self.HStep
-            if self.HStep >= (self.VPulse - target_pulse) >= (-1 * self.HStep):
+            if self.HStep >= (self.HPulse - target_pulse) >= (-1 * self.HStep):
                 self.HPulse = target_pulse
             self.pwm.setServoPulse(0, int(self.HPulse))
+            time.sleep(0.01)
         return None
 
     def set_tilt_center(self, tilt_center):
@@ -94,6 +97,7 @@ class Servo(object):
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
             self.pwm.setServoPulse(0, int(self.VPulse))
+            time.sleep(0.01)
         return None
 
     def pan_relative(self, pan):
@@ -115,4 +119,5 @@ class Servo(object):
             if self.HStep >= (self.HPulse - target_pulse) >= (-1 * self.HStep):
                 self.HPulse = target_pulse
             self.pwm.setServoPulse(0, int(self.HPulse))
+            time.sleep(0.01)
         return None

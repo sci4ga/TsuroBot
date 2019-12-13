@@ -137,7 +137,8 @@ def post_look_at(pan, tilt):
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_at(target_pan=pan, target_tilt=tilt)
+    tsurobot.camera.servos.tilt_absolute(tilt)
+    tsurobot.camera.servos.pan_absolute(pan)
     return make_response('Tsurobot is looking at target [{0}, {1}]'.format(pan, tilt), 200)
 
 def post_calibrate_pan(offset):
