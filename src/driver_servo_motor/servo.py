@@ -5,108 +5,119 @@ Driver module for servo, with PCA9685
 
 from . import PCA9685
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
 
 class Servo(object):
-    '''Servo driver class'''
-    _MIN_PULSE_WIDTH = 600
-    _MAX_PULSE_WIDTH = 2400
-    _DEFAULT_PULSE_WIDTH = 1500
-    _FREQUENCY = 60
+    def __init__(self):
+        self.pwm = PCA9685.PCA9685(0x40)
+        self.pwm.setPWMFreq(50)
+        #Set servo parameters
+        self.pulse_min = 500
+        self.pulse_max = 2500
+        self.v_offset = 0
+        self.h_offset = 0
+        self.HPulse = 1500  #Sets the initial Pulse
+        self.HStep = 5      #Sets the initial step length
+        self.VPulse = 1500  #Sets the initial Pulse
+        self.VStep = 5      #Sets the initial step length
+        self.pwm.setServoPulse(1, int(self.VPulse))
+        self.pwm.setServoPulse(0, int(self.HPulse))
 
-    def __init__(self, channel, offset=0, lock=True, bus_number=None, address=0x40):
-        ''' Init a servo on specific channel, this offset '''
-        logger.info("Initialize servo motor with channel: {0}, offset: {1}, lock: {2}, bus_number: {3}, address: {4}".format(
-                    str(channel), str(offset), str(lock), str(bus_number), str(address)))
-        if channel < 0 or channel > 16:
-            raise ValueError("Servo channel \"{0}\" is not in (0, 15).".format(channel))
-        self.channel = channel
-        self.offset = offset
-        self.lock = lock
+    def tilt_absolute(self, tilt):
+        "tilt from -100 to 100"
+        target_pulse = (self.pulse_max - self.pulse_min)/200 * (tilt + 100) + 500
+        if target_pulse > self.pulse_max: 
+            target_pulse = self.pulse_max
+        if target_pulse < self.pulse_min: 
+            target_pulse = self.pulse_min
+        while(self.VPulse != target_pulse):
+            if self.VPulse < target_pulse:
+                self.VPulse += self.VStep
+            elif self.VPulse > target_pulse:
+                self.VPulse -= self.VStep            
+            if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
+                self.VPulse = target_pulse
+            self.pwm.setServoPulse(1, int(self.VPulse))
+            time.sleep(0.01)
+        return None
 
-        self.pwm = PCA9685.PWM(bus_number=bus_number, address=address)
-        self.frequency = self._FREQUENCY
-        self.write(90)
+    def pan_absolute(self, pan):
+        "pan from -100 to 100"
+        if -100 > pan > 100:
+            return None
+        target_pulse = (self.pulse_max - self.pulse_min)/200 * (pan + 100) + 500
+        if target_pulse > self.pulse_max: 
+            target_pulse = self.pulse_max
+        if target_pulse < self.pulse_min: 
+            target_pulse = self.pulse_min
+        while(self.HPulse != target_pulse):
+            if self.HPulse < target_pulse:
+                self.HPulse += self.HStep
+            elif self.HPulse > target_pulse:
+                self.HPulse -= self.HStep
+            if self.HStep >= (self.HPulse - target_pulse) >= (-1 * self.HStep):
+                self.HPulse = target_pulse
+            self.pwm.setServoPulse(0, int(self.HPulse))
+            time.sleep(0.01)
+        return None
 
-    def setup(self):
-        self.pwm.setup()
+    def set_tilt_center(self, tilt_center):
+        "offset tilt center from -50 to 50"
+        if -50 > tilt_center > 50:
+            return None
+        self.v_offset = tilt_center
+        return None
 
-    def _angle_to_analog(self, angle):
-        ''' Calculate 12-bit analog value from giving angle '''
-        pulse_wide = self.pwm.map(angle, 0, 180, self._MIN_PULSE_WIDTH, self._MAX_PULSE_WIDTH)
-        analog_value = int(float(pulse_wide) / 1000000 * self.frequency * 4096)
-        logger.debug('Angle %d equals Analog_value %d' % (angle, analog_value))
-        return analog_value
+    def set_pan_center(self, pan_center):
+        "offset pan center from -50 to 50"
+        if -50 > pan_center > 50:
+            return None
+        self.h_offset = pan_center
+        return None
 
-    @property
-    def frequency(self):
-        return self._frequency
+    def tilt_relative(self, tilt):
+        "tilt from -100 to 100 with offset"
+        if -100 > tilt > 100:
+            return None
+        target_pulse = (self.pulse_max - self.pulse_min )/200 * (pan + 100) + 500
+        offset_pulse = (self.pulse_max - self.pulse_min )/200 * (self.v_offset ) + 500
+        target_pulse = target_pulse + offset_pulse
+        if target_pulse > self.pulse_max:
+            target_pulse = self.pulse_max
+        if target_pulse < self.pulse_min:
+            target_pulse = self.pulse_min
+        while(self.VPulse != target_pulse):
+            if self.VPulse < target_pulse:
+                self.VPulse += self.VStep
+            elif self.VPulse > target_pulse:
+                self.VPulse -= self.VStep          
+            if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
+                self.VPulse = target_pulse
+            self.pwm.setServoPulse(0, int(self.VPulse))
+            time.sleep(0.01)
+        return None
 
-    @frequency.setter
-    def frequency(self, value):
-        self._frequency = value
-        self.pwm.frequency = value
-
-    @property
-    def offset(self):
-        return self._offset
-
-    @offset.setter
-    def offset(self, value):
-        ''' Set offset for much user-friendly '''
-        self._offset = value
-        logger.debug('Set offset to %d' % self.offset)
-
-    def write(self, angle):
-        ''' Turn the servo with giving angle. '''
-        if self.lock:
-            if angle > 180:
-                angle = 180
-            if angle < 0:
-                angle = 0
-        else:
-            if angle < 0 or angle > 180:
-                raise ValueError("Servo \"{0}\" turn angle \"{1}\" is not in (0, 180).".format(self.channel, angle))
-        val = self._angle_to_analog(angle)
-        val += self.offset
-        self.pwm.write(self.channel, 0, val)
-        logger.debug('Turn angle = %d' % angle)
-
-
-def test():
-    '''Servo driver test on channel 1'''
-    import time
-    a = Servo(1)
-    a.setup()
-    for i in range(0, 180, 5):
-        logger.info(i)
-        a.write(i)
-        time.sleep(0.1)
-    for i in range(180, 0, -5):
-        logger.info(i)
-        a.write(i)
-        time.sleep(0.1)
-    for i in range(0, 91, 2):
-        a.write(i)
-        time.sleep(0.05)
-    logger.info(i)
-
-
-def install():
-    all_servo = [0, 0, 0, 0] * 4
-    for i in range(16):
-        all_servo[i] = Servo(i)
-    for servo in all_servo:
-        servo.setup()
-        servo.write(90)
-
-
-if __name__ == '__main__':
-    import sys
-    if len(sys.argv) == 2:
-        if sys.argv[1] == "install":
-            install()
-    else:
-        test()
+    def pan_relative(self, pan):
+        "pan from -100 to 100 with offset"
+        if -100 > pan > 100:
+            return None
+        target_pulse = (self.pulse_max - self.pulse_min)/200 * (pan + 100) + 500
+        offset_pulse = (self.pulse_max - self.pulse_min)/200 * (self.h_offset) + 500
+        target_pulse = target_pulse + offset_pulse
+        if target_pulse > self.pulse_max:
+            target_pulse = self.pulse_max
+        if target_pulse < self.pulse_min: 
+            target_pulse = self.pulse_min
+        while(self.HPulse != target_pulse):
+            if self.HPulse < target_pulse:
+                self.HPulse += self.HStep
+            elif self.HPulse > target_pulse:
+                self.HPulse -= self.HStep
+            if self.HStep >= (self.HPulse - target_pulse) >= (-1 * self.HStep):
+                self.HPulse = target_pulse
+            self.pwm.setServoPulse(0, int(self.HPulse))
+            time.sleep(0.01)
+        return None

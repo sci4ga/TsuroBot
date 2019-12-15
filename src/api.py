@@ -114,15 +114,20 @@ def post_test_vertical_view():
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_center()
+    logger.info("tilt to 0")
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_tilt=0)
+    logger.info("tilt to 100")
+    tsurobot.camera.servos.tilt_absolute(100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("tilt to 0")
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_tilt=180)
+    logger.info("tilt to -100")
+    tsurobot.camera.servos.tilt_absolute(-100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("tilt to 0")
+    tsurobot.camera.servos.tilt_absolute(0)
     time.sleep(1)
     return make_response('Tsurobot vertical view test complete', 200)
 
@@ -132,7 +137,8 @@ def post_look_at(pan, tilt):
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_at(target_pan=pan, target_tilt=tilt)
+    tsurobot.camera.servos.tilt_absolute(tilt)
+    tsurobot.camera.servos.pan_absolute(pan)
     return make_response('Tsurobot is looking at target [{0}, {1}]'.format(pan, tilt), 200)
 
 def post_calibrate_pan(offset):
@@ -161,15 +167,20 @@ def post_test_horizontal_view():
     with a '200' upon success
     """
     # TODO - adapt to alphabot
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_pan=0)
+    logger.info("pan to -100")
+    tsurobot.camera.servos.pan_absolute(-100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
-    tsurobot.camera.look_at(target_pan=180)
+    logger.info("pan to 100")
+    tsurobot.camera.servos.pan_absolute(100)
     time.sleep(1)
-    tsurobot.camera.look_center()
+    logger.info("pan to 0")
+    tsurobot.camera.servos.pan_absolute(0)
     time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 
@@ -196,6 +207,18 @@ def get_camera_still():
         return send_file(file_name, mimetype='image/jpeg')
     finally:
         os.remove(file_name)
+
+def post_camera_burst():
+    """
+    This function responds to a request for /get_camera_burst/
+    with a list of photos upon successful capture of a burst of photos
+    """
+    logging.info(f"start: {datetime.datetime.now()}")
+    for i in range(60):
+        tsurobot.camera.vision.grab_still_mem()
+        logging.info(f"capture {i}: {datetime.datetime.now()}")
+    logging.info(f"end: {datetime.datetime.now()}")
+    return make_response('Burst finished', 200)
 
 def post_play_game(action):
     """

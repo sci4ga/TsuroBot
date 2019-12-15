@@ -31,11 +31,11 @@ paths:
           description: Success
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
-                items: 
-                  properties: 
-                    left: 
+                items:
+                  properties:
+                    left:
                       type: integer
                     right:
                       type: integer
@@ -51,15 +51,15 @@ paths:
           description: Success
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
-                items: 
-                  properties: 
-                    left: 
+                items:
+                  properties:
+                    left:
                       type: integer
                     center-left:
                       type: integer
-                    center: 
+                    center:
                       type: integer
                     center-right:
                       type: integer
@@ -187,6 +187,15 @@ paths:
               schema:
                 type: string
                 format: binary
+  /camera_burst:
+    post:
+      operationId: api.post_camera_burst
+      tags:
+        - dev
+      summary: Grabs many frames from the camera in a quick burst and saves them to the raspberry pi
+      responses:
+        '200':
+          description: Create capture.jpg
   /git:
     put:
       operationId: api.put_git_pull
