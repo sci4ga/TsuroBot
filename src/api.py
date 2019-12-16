@@ -53,9 +53,16 @@ def get_ack():
     return make_response('Tsuro ACK', 200)
 
 
-def post_test_led():
+def post_test_led(led, red, green, blue):
     "cycle through colors for each LED"
     response_message = "LED test success."
+    return make_response(response_message, 200)
+
+
+def post_led(led, red, green, blue):
+    "change led color LED"
+    tsurobot.light.set_led(led, red, green, blue)
+    response_message = "led {0} color set to red={1}, green={2}, blue={3}".format(led, red, green, blue)
     return make_response(response_message, 200)
 
 

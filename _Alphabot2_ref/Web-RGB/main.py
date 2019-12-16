@@ -3,7 +3,7 @@
 from bottle import get,request, route, run, static_file,template  
 import time, threading
 # sudo pip install rpi_ws281x
-from rpi_ws281x import Adafruit_NeoPixel, Color
+from rpi_ws281x import Adafruit_NeoPixel, Color, ws
 
 # LED strip configuration:
 LED_COUNT      = 4      # Number of LED pixels.
@@ -56,7 +56,7 @@ def rgbLight():
 def lightType():
     global light_type
     light_type = request.POST.get('type')
-    print("lightType="+light_type)
+    print("lightType="+ str(light_type))
 
 #灯光循环检测控制
 def lightLoop():
