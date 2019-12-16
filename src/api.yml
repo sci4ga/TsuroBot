@@ -85,6 +85,53 @@ paths:
       responses:
         '200':
           description: Success
+  /set_led:
+    post:
+      operationId: api.post_led
+      tags:
+        - dev
+      summary: set led color
+      description: Returns 200
+      parameters:
+      - name: led
+        in: query
+        description: Amount to offset tilt (positive is up)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: red
+        in: query
+        description: Red value (0-255)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: green
+        in: query
+        description: Green value (0-255)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: blue
+        in: query
+        description: Blue value (0-255)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Success
   /calibrate_tilt:
     post:
       operationId: api.post_calibrate_tilt

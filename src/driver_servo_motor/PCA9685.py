@@ -46,7 +46,11 @@ class PCA9685:
     result = self.bus.read_byte_data(self.address, reg)
     logger.debug("I2C: Device 0x%02X returned 0x%02X from reg 0x%02X" % (self.address, result & 0xFF, reg))
     return result
-	
+
+  def reset(self):
+    logger.debug("Reseting PCA9685")
+    self.write(self.__MODE1, 0x00)
+
   def setPWMFreq(self, freq):
     "Sets the PWM frequency"
     prescaleval = 25000000.0    # 25MHz
