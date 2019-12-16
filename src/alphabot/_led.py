@@ -56,7 +56,7 @@ def rgbLight():
 def lightType():
     global light_type
     light_type = request.POST.get('type')
-    print("lightType="+ str(light_type))
+    print("lightType=" + str(light_type))
 
 #灯光循环检测控制
 def lightLoop():
