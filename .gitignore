@@ -1,3 +1,10 @@
+# IDE files
+# Mac OS specific files
+.DS_Store
+
+# IDE files
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,3 +109,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+setup.cfg
+
+*.log.*
+
+temp/*

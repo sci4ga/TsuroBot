@@ -1,0 +1,10 @@
+{
+    "turning_offset": 0,
+    "left_polarity_correction": false,
+    "left_motor_direction_channel": 17,
+    "left_motor_pwm_channel": 4,
+    "right_polarity_correction": false,
+    "right_motor_direction_channel": 27,
+    "right_motor_pwm_channel": 5,
+    "config_file": "config_wheels.json"
+}

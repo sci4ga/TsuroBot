@@ -1,0 +1,256 @@
+openapi: 3.0.0
+info:
+  title: TsuroBot API
+  description: AlphaBot2 Tsuro API
+  version: 0.0.1
+
+servers:
+  - url: /api
+    description: Use IP Scanner to identify full URL
+
+paths:
+  /ack:
+    get:
+      operationId: api.get_ack
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /front_ir:
+    get:
+      operationId: api.get_front_ir
+      tags:
+        - dev
+      summary: Get front ir measurement
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  properties:
+                    left:
+                      type: integer
+                    right:
+                      type: integer
+  /bottom_ir:
+    get:
+      operationId: api.get_bottom_ir
+      tags:
+        - dev
+      summary: Get bottom ir measurement
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  properties:
+                    left:
+                      type: integer
+                    center-left:
+                      type: integer
+                    center:
+                      type: integer
+                    center-right:
+                      type: integer
+                    right:
+                      type: integer
+  /test_wheels:
+    post:
+      operationId: api.post_test_wheels
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /test_vertical_view:
+    post:
+      operationId: api.post_test_vertical_view
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /calibrate_tilt:
+    post:
+      operationId: api.post_calibrate_tilt
+      tags:
+        - dev
+      summary: Calibrate camera tilt
+      description: Returns 200
+      parameters:
+      - name: offset
+        in: query
+        description: Amount to offset tilt (positive is up)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Success
+  /test_horizontal_view:
+    post:
+      operationId: api.post_test_horizontal_view
+      tags:
+        - dev
+      summary: Test communication
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+  /calibrate_pan:
+    post:
+      operationId: api.post_calibrate_pan
+      tags:
+        - dev
+      summary: Calibrate camera pan
+      description: Returns 200
+      parameters:
+      - name: offset
+        in: query
+        description: Amount to offset pan (positive is left)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Success
+  /look_at:
+    post:
+      operationId: api.post_look_at
+      tags:
+        - dev
+      summary: Pan/tilt camera to target position
+      description: Returns 200
+      parameters:
+      - name: pan
+        in: query
+        description: pan position (0-180)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 90
+      - name: tilt
+        in: query
+        description: tilt position (0-180)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 90
+      responses:
+        '200':
+          description: Success
+  /camera_still:
+    post:
+      operationId: api.post_camera_still
+      tags:
+        - dev
+      summary: Grabs a frame from camera and saves on server
+      description: Returns 200
+      responses:
+        '200':
+          description: Create capture.jpg
+    get:
+      operationId: api.get_camera_still
+      tags:
+        - dev
+      summary: Grabs a frame from camera and returns it in response
+      responses:
+        '200':
+          description: capture.jpg
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /camera_burst:
+    post:
+      operationId: api.post_camera_burst
+      tags:
+        - dev
+      summary: Grabs many frames from the camera in a quick burst and saves them to the raspberry pi
+      responses:
+        '200':
+          description: Create capture.jpg
+  /git:
+    put:
+      operationId: api.put_git_pull
+      summary: Git pull
+      description: Returns 200
+      parameters:
+      - name: branch_name
+        in: query
+        description: Name of branch to pull from
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          default: master
+          enum:
+          - Dev
+          - QA
+          - master
+      tags:
+        - dev
+      responses:
+        '200':
+          description: Success
+  /info:
+    get:
+      operationId: api.get_info
+      tags:
+        - dev
+      summary: Provides application info.
+      description: Returns installed packages with versions.
+      responses:
+        '200':
+          description: A JSON array of packages and versions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+  /tsuro/play_game:
+    post:
+      operationId: api.post_play_game
+      tags:
+        - tsuro
+      summary: Play the tsuro program
+      description: Returns 200
+      responses:
+        '200':
+          description: Tsuro program complete
+
+components:
+  schemas:
+    Info:
+      properties:
+        packages:
+          type: array
+        other:
+          type: string
+
