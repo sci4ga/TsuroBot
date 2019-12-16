@@ -66,6 +66,11 @@ def post_led(led, red, green, blue):
     return make_response(response_message, 200)
 
 
+def get_button():
+    "wait for and report a button press"
+    press = tsurobot.button.await_input()
+    return press
+
 def post_beep(seconds):
     "sound buzzer for {0} seconds".format(seconds)
     tsurobot.sound.beep(seconds)

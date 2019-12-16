@@ -1,5 +1,9 @@
 import RPi.GPIO as GPIO
 import time
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Buzzer():
     def __init__(self):

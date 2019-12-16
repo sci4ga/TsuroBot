@@ -65,6 +65,32 @@ paths:
                       type: integer
                     right:
                       type: integer
+  /button:
+    get:
+      operationId: api.get_button
+      tags:
+        - dev
+      summary: Get button press
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  properties:
+                    ctr:
+                      type: bool
+                    a:
+                      type: bool
+                    b:
+                      type: bool
+                    c:
+                      type: bool
+                    d:
+                      type: bool
   /test_wheels:
     post:
       operationId: api.post_test_wheels
