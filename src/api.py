@@ -66,6 +66,13 @@ def post_led(led, red, green, blue):
     return make_response(response_message, 200)
 
 
+def post_beep(seconds):
+    "sound buzzer for {0} seconds".format(seconds)
+    tsurobot.sound.beep(seconds)
+    response_message = "buzzer sounded for {0} seconds".format(seconds)
+    return make_response(response_message, 200)
+
+
 def get_front_ir():
     "get signal for left and right front IR sensors"
     # TODO

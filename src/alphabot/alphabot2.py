@@ -1,7 +1,7 @@
 # import native modules
 import logging
 # local imports
-from alphabot import steering, camera, led
+from alphabot import steering, camera, led, buzzer
 
 
 logger = logging.getLogger(__name__)
@@ -13,6 +13,7 @@ class AlphaBot2:
         self.steering = steering.Steering()
         self.camera = camera.Camera()
         self.light = led.LED()
+        self.sound = buzzer.Buzzer()
         # TODO: add bottom ir
         # TODO: add front ir
 
