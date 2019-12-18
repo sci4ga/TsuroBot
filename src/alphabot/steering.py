@@ -2,7 +2,7 @@
 A module to steer the alphabot
 '''
 import time
-from driver_servo_motor.wheel import Wheel
+from alphabot.wheel import Wheel
 import logging
 
 logger = logging.getLogger(__name__)

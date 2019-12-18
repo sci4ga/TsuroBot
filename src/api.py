@@ -65,6 +65,12 @@ def post_led(led, red, green, blue):
     response_message = "led {0} color set to red={1}, green={2}, blue={3}".format(led, red, green, blue)
     return make_response(response_message, 200)
 
+def get_front_ir():
+    "get front IR sensor signals"
+    print("Getting IR")
+    signal = tsurobot.front_ir.get_front_ir()
+    print("IR signal: {0}".format(str(signal)))
+    return signal
 
 def get_button():
     "wait for and report a button press"

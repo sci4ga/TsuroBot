@@ -65,6 +65,26 @@ paths:
                       type: integer
                     right:
                       type: integer
+  /front_ir:
+    get:
+      operationId: api.get_front_ir
+      tags:
+        - dev
+      summary: Get front IR signals
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  properties:
+                    left:
+                      type: integer
+                    right:
+                      type: integer
   /button:
     get:
       operationId: api.get_button

@@ -3,8 +3,8 @@
 A module to pan/tilt the camera and access the camera sensor
 '''
 
-from driver_camera.vision import Vision
-from driver_servo_motor.servo import Servo
+from alphabot.vision import Vision
+from alphabot.servo import Servo
 import time
 import json
 import logging

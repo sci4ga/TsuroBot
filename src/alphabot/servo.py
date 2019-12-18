@@ -3,7 +3,7 @@
 Driver module for servo, with PCA9685
 '''
 
-from . import PCA9685
+from alphabot.PCA9685 import PCA9685
 import logging
 import time
 
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class Servo(object):
     def __init__(self):
-        self.pwm = PCA9685.PCA9685(0x40)
+        self.pwm = PCA9685(0x40)
         self.pwm.setPWMFreq(50)
         #Set servo parameters
         self.pulse_min = 500
