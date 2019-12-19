@@ -5,7 +5,6 @@ A module to pan/tilt the camera and access the camera sensor
 
 from alphabot.vision import Vision
 from alphabot.servo import Servo
-import time
 import json
 import logging
 
@@ -19,7 +18,7 @@ class Camera(object):
         logger.info("Initializing Camera with bus_number: {0}, config: {1}".format(str(bus_number), str(config_file)))
         with open(config_file) as f:
             self.config = json.load(f)
-        # TODO: adapt the servos to alphabot 
+        # TODO: adapt the servos to alphabot
         # self.pan_servo = Servo(self.config["cam_servo_pan_channel"], bus_number=bus_number, offset=self.config['pan_offset'])
         # self.tilt_servo = Servo(self.config["cam_servo_tilt_channel"], bus_number=bus_number, offset=self.config['tilt_offset'])
         self.servos = Servo()
@@ -32,10 +31,8 @@ class Camera(object):
         logger.debug('Pan offset value: {0}'.format(str(self.config['pan_offset'])))
         logger.debug('Tilt offset value: {0}'.format(str(self.config['tilt_offset'])))"""
 
-        #self.pan_servo.offset = self.config['pan_offset']
-        #self.tilt_servo.offset = self.config['tilt_offset']
-
-
+        # self.pan_servo.offset = self.config['pan_offset']
+        # self.tilt_servo.offset = self.config['tilt_offset']
 
         """def calibrate_tilt(self, tilt):
         ''' Calibrate the camera to up '''
@@ -53,4 +50,3 @@ class Camera(object):
         ''' Save the calibration value '''
         with open(self.config["config_file"], 'w') as outfile:
             json.dump(self.config, outfile)
-

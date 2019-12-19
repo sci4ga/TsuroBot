@@ -17,7 +17,6 @@ import json
 import os
 # local modules
 from tsuro.tsurobot import Tsurobot, play_game
-import logging
 
 logger = logging.getLogger(__name__)
 logger.info("logging from api: {0}".format(__name__))
@@ -34,14 +33,15 @@ def get_info():
     : return:        json with a 'packages' array and 'other' string
     """
 
-    packages_list = [d.project_name + "==" + pkg_resources.get_distribution(d.project_name).version
+    packages_list = [d.project_name + "==" +
+                     pkg_resources.get_distribution(d.project_name).version
                      for d in pkg_resources.working_set]
 
     with open(config_file) as f:
         config = json.load(f)
     other = socket.gethostname() + " - " + platform.platform()
 
-    return {'packages': packages_list, 'other': other, 'config':config}
+    return {'packages': packages_list, 'other': other, 'config': config}
 
 
 def get_ack():
@@ -65,16 +65,19 @@ def post_led(led, red, green, blue):
     response_message = "led {0} color set to red={1}, green={2}, blue={3}".format(led, red, green, blue)
     return make_response(response_message, 200)
 
+
 def get_front_ir():
     "get front IR sensor signals"
     signal = tsurobot.front_ir.get_front_ir()
     logger.info("IR signal: {0}".format(str(signal)))
     return signal
 
+
 def get_button():
     "wait for and report a button press"
     press = tsurobot.button.await_input()
     return press
+
 
 def post_beep(seconds):
     "sound buzzer for {0} seconds".format(seconds)
@@ -96,6 +99,7 @@ def get_receiver_ir():
     key = tsurobot.receiver_ir.await_key()
     logger.info(str(key))
     return key
+
 
 def put_git_pull(branch_name):
     """
@@ -125,6 +129,7 @@ def post_test_wheels():
 
     return make_response('Tsurobot wheel test complete', 200)
 
+
 def post_test_vertical_view():
     """
     This function responds to a request for /test_vertical_view/
@@ -148,6 +153,7 @@ def post_test_vertical_view():
     time.sleep(1)
     return make_response('Tsurobot vertical view test complete', 200)
 
+
 def post_look_at(pan, tilt):
     """
     This function responds to a request for /look_at/
@@ -157,6 +163,7 @@ def post_look_at(pan, tilt):
     tsurobot.camera.servos.tilt_absolute(tilt)
     tsurobot.camera.servos.pan_absolute(pan)
     return make_response('Tsurobot is looking at target [{0}, {1}]'.format(pan, tilt), 200)
+
 
 def post_calibrate_pan(offset):
     """
@@ -168,6 +175,7 @@ def post_calibrate_pan(offset):
     tsurobot.camera.save_calibration()
     return make_response('Tsurobot pan is offset to {0}'.format(tsurobot.camera.config["pan_offset"]), 200)
 
+
 def post_calibrate_tilt(offset):
     """
     This function responds to a request for /calibrate_pan/
@@ -177,6 +185,7 @@ def post_calibrate_tilt(offset):
     tsurobot.camera.calibrate_tilt(tilt=offset)
     tsurobot.camera.save_calibration()
     return make_response('Tsurobot tilt is offset to {0}'.format(tsurobot.camera.config["tilt_offset"]), 200)
+
 
 def post_test_horizontal_view():
     """
@@ -201,6 +210,7 @@ def post_test_horizontal_view():
     time.sleep(1)
     return make_response('Tsurobot horizontal view test complete', 200)
 
+
 def post_camera_still():
     """
     This function responds to a request for /test_front_wheels/
@@ -212,6 +222,7 @@ def post_camera_still():
     os.rename(file_path, ".././temp/" + new_name + ".jpg")
 
     return make_response('Tsurobot still grabbed.', 200)
+
 
 def get_camera_still():
     """
@@ -225,6 +236,7 @@ def get_camera_still():
     finally:
         os.remove(file_name)
 
+
 def post_camera_burst():
     """
     This function responds to a request for /get_camera_burst/
@@ -237,11 +249,11 @@ def post_camera_burst():
     logging.info(f"end: {datetime.datetime.now()}")
     return make_response('Burst finished', 200)
 
+
 def post_play_game(action):
     """
     This function responds to a request for /tsuro/launch_game
     with a '200' upon successful completion
     """
     play_game(tsurobot)
-
     return make_response('Tsuro game play complete', 200)

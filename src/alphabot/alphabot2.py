@@ -6,6 +6,7 @@ from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR, r
 logger = logging.getLogger(__name__)
 logger.info("logging from alphabot2: {0}".format(__name__))
 
+
 class AlphaBot2:
     def __init__(self):
         logger.info("Initializing AlphaBot2")

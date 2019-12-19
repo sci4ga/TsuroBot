@@ -7,11 +7,7 @@ from flask import render_template
 # native modules
 import json
 import logging
-from logging.handlers import TimedRotatingFileHandler
-from flask.logging import default_handler
 import logging.config
-
-
 
 config_file = './config.json'
 with open(config_file) as f:

@@ -14,30 +14,30 @@ class Servo(object):
     def __init__(self):
         self.pwm = PCA9685(0x40)
         self.pwm.setPWMFreq(50)
-        #Set servo parameters
+        # Set servo parameters
         self.pulse_min = 500
         self.pulse_max = 2500
         self.v_offset = 0
         self.h_offset = 0
-        self.HPulse = 1500  #Sets the initial Pulse
-        self.HStep = 5      #Sets the initial step length
-        self.VPulse = 1500  #Sets the initial Pulse
-        self.VStep = 5      #Sets the initial step length
+        self.HPulse = 1500  # Sets the initial Pulse
+        self.HStep = 5      # Sets the initial step length
+        self.VPulse = 1500  # Sets the initial Pulse
+        self.VStep = 5      # Sets the initial step length
         self.pwm.setServoPulse(1, int(self.VPulse))
         self.pwm.setServoPulse(0, int(self.HPulse))
 
     def tilt_absolute(self, tilt):
         "tilt from -100 to 100"
         target_pulse = (self.pulse_max - self.pulse_min)/200 * (tilt + 100) + 500
-        if target_pulse > self.pulse_max: 
+        if target_pulse > self.pulse_max:
             target_pulse = self.pulse_max
-        if target_pulse < self.pulse_min: 
+        if target_pulse < self.pulse_min:
             target_pulse = self.pulse_min
         while(self.VPulse != target_pulse):
             if self.VPulse < target_pulse:
                 self.VPulse += self.VStep
             elif self.VPulse > target_pulse:
-                self.VPulse -= self.VStep            
+                self.VPulse -= self.VStep
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
             self.pwm.setServoPulse(1, int(self.VPulse))
@@ -49,9 +49,9 @@ class Servo(object):
         if -100 > pan > 100:
             return None
         target_pulse = (self.pulse_max - self.pulse_min)/200 * (pan + 100) + 500
-        if target_pulse > self.pulse_max: 
+        if target_pulse > self.pulse_max:
             target_pulse = self.pulse_max
-        if target_pulse < self.pulse_min: 
+        if target_pulse < self.pulse_min:
             target_pulse = self.pulse_min
         while(self.HPulse != target_pulse):
             if self.HPulse < target_pulse:
@@ -82,8 +82,8 @@ class Servo(object):
         "tilt from -100 to 100 with offset"
         if -100 > tilt > 100:
             return None
-        target_pulse = (self.pulse_max - self.pulse_min )/200 * (pan + 100) + 500
-        offset_pulse = (self.pulse_max - self.pulse_min )/200 * (self.v_offset ) + 500
+        target_pulse = (self.pulse_max - self.pulse_min)/200 * (tilt + 100) + 500
+        offset_pulse = (self.pulse_max - self.pulse_min)/200 * (self.v_offset) + 500
         target_pulse = target_pulse + offset_pulse
         if target_pulse > self.pulse_max:
             target_pulse = self.pulse_max
@@ -93,7 +93,7 @@ class Servo(object):
             if self.VPulse < target_pulse:
                 self.VPulse += self.VStep
             elif self.VPulse > target_pulse:
-                self.VPulse -= self.VStep          
+                self.VPulse -= self.VStep
             if self.VStep >= (self.VPulse - target_pulse) >= (-1 * self.VStep):
                 self.VPulse = target_pulse
             self.pwm.setServoPulse(0, int(self.VPulse))
@@ -109,7 +109,7 @@ class Servo(object):
         target_pulse = target_pulse + offset_pulse
         if target_pulse > self.pulse_max:
             target_pulse = self.pulse_max
-        if target_pulse < self.pulse_min: 
+        if target_pulse < self.pulse_min:
             target_pulse = self.pulse_min
         while(self.HPulse != target_pulse):
             if self.HPulse < target_pulse:

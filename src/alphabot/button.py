@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
-import time
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class Button():
     def __init__(self):
@@ -13,11 +13,11 @@ class Button():
         self.D = 11
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(self.CTR,GPIO.IN,GPIO.PUD_UP)
-        GPIO.setup(self.A,GPIO.IN,GPIO.PUD_UP)
-        GPIO.setup(self.B,GPIO.IN,GPIO.PUD_UP)
-        GPIO.setup(self.C,GPIO.IN,GPIO.PUD_UP)
-        GPIO.setup(self.D,GPIO.IN,GPIO.PUD_UP)
+        GPIO.setup(self.CTR, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(self.A, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(self.B, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(self.C, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(self.D, GPIO.IN, GPIO.PUD_UP)
 
     def get_input(self):
         signal = {}
@@ -33,4 +33,3 @@ class Button():
         while not any([signal[x] for x in signal]):
             signal = self.get_input()
         return signal
-

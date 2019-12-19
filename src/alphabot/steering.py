@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Steering(object):
     '''Wheel movement control class'''
-    def __init__(self):     
+    def __init__(self):
         self.right_wheel = Wheel(fwd_pin=13, rev_pin=12, pwm_pin=6)
         self.left_wheel = Wheel(fwd_pin=21, rev_pin=20, pwm_pin=26)
 

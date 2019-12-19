@@ -9,15 +9,13 @@ class Buzzer():
     def __init__(self):
         self.channel = 4
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.channel,GPIO.OUT)
-
+        GPIO.setup(self.channel, GPIO.OUT)
 
     def on(self):
-        GPIO.output(self.channel,GPIO.HIGH)
-
+        GPIO.output(self.channel, GPIO.HIGH)
 
     def off(self):
-        GPIO.output(self.channel,GPIO.LOW)
+        GPIO.output(self.channel, GPIO.LOW)
 
     def beep(self, seconds=0.1):
         self.on()
