@@ -3,7 +3,7 @@ from alphabot import alphabot2
 import logging
 
 logger = logging.getLogger(__name__)
-
+logger.info("logging from tsurobot: {0}".format(__name__))
 
 class Tsurobot(alphabot2.AlphaBot2):
     """

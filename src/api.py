@@ -20,7 +20,7 @@ from tsuro.tsurobot import Tsurobot, play_game
 import logging
 
 logger = logging.getLogger(__name__)
-
+logger.info("logging from api: {0}".format(__name__))
 config_file = "./config.json"
 tsurobot = Tsurobot(config_file)
 
@@ -67,9 +67,8 @@ def post_led(led, red, green, blue):
 
 def get_front_ir():
     "get front IR sensor signals"
-    print("Getting IR")
     signal = tsurobot.front_ir.get_front_ir()
-    print("IR signal: {0}".format(str(signal)))
+    logger.info("IR signal: {0}".format(str(signal)))
     return signal
 
 def get_button():
@@ -82,15 +81,6 @@ def post_beep(seconds):
     tsurobot.sound.beep(seconds)
     response_message = "buzzer sounded for {0} seconds".format(seconds)
     return make_response(response_message, 200)
-
-
-def get_front_ir():
-    "get signal for left and right front IR sensors"
-    # TODO
-    signal = {}
-    signal["left"] = 0
-    signal["right"] = 0
-    return signal
 
 
 def get_bottom_ir():

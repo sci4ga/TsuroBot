@@ -2,10 +2,11 @@ import RPi.GPIO as GPIO
 import logging
 
 logger = logging.getLogger(__name__)
-
+logger.info("logging from frontIR: {0}".format(__name__))
 
 class Front_IR():
     def __init__(self):
+        logger.info("Initializing front IR")
         self.right_channel = 16
         self.left_channel = 19
         GPIO.setmode(GPIO.BCM)
@@ -17,11 +18,11 @@ class Front_IR():
 
     def get_front_ir(self):
         signal = {}
-        print("get_front_ir")
+        logger.info("getting front IR")
         signal["left"] = GPIO.input(self.left_channel)
         signal["right"] = GPIO.input(self.right_channel)
-        print("Left: {0}".format(str(signal["left"])))
-        print("Right: {0}".format(str(signal["right"])))
+        logger.info("Left: {0}".format(str(signal["left"])))
+        logger.info("Right: {0}".format(str(signal["right"])))
         return signal
 
 
