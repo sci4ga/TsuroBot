@@ -86,12 +86,7 @@ def post_beep(seconds):
 def get_bottom_ir():
     "get signal for bottom IR sensors"
     # TODO
-    signal = {}
-    signal["left"] = 0
-    signal["center-left"] = 0
-    signal["center"] = 0
-    signal["center-right"] = 0
-    signal["right"] = 0
+    signal = tsurobot.bottom_ir.get_analog_read()
     return signal
 
 

@@ -1,7 +1,7 @@
 # import native modules
 import logging
 # local imports
-from alphabot import steering, camera, led, buzzer, button, frontIR
+from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR
 
 logger = logging.getLogger(__name__)
 logger.info("logging from alphabot2: {0}".format(__name__))
@@ -9,16 +9,20 @@ logger.info("logging from alphabot2: {0}".format(__name__))
 class AlphaBot2:
     def __init__(self):
         logger.info("Initializing AlphaBot2")
-
-        #self.steering = steering.Steering()
-        #self.camera = camera.Camera()
-        #self.light = led.LED()
-        #self.sound = buzzer.Buzzer()
-        #self.button = button.Button()
-        logger.info("Add front IR to alphabot")
+        logger.debug("Add steering to alphabot")
+        self.steering = steering.Steering()
+        logger.debug("Add camera to alphabot")
+        self.camera = camera.Camera()
+        logger.debug("Add LEDs to alphabot")
+        self.light = led.LED()
+        logger.debug("Add buzzer to alphabot")
+        self.sound = buzzer.Buzzer()
+        logger.debug("Add buttons to alphabot")
+        self.button = button.Button()
+        logger.debug("Add front IR to alphabot")
         self.front_ir = frontIR.Front_IR()
-        # TODO: add bottom ir
-        # TODO: add front ir
+        logger.debug("Add bottom IR to alphabot")
+        self.bottom_ir = bottomIR.Bottom_IR()
 
 
 """    def get_state(self):
