@@ -39,6 +39,20 @@ paths:
                       type: integer
                     right:
                       type: integer
+  /receiver_ir:
+    get:
+      operationId: api.get_receiver_ir
+      tags:
+        - dev
+      summary: Get ir receiver key
+      description: Returns 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
   /bottom_ir:
     get:
       operationId: api.get_bottom_ir

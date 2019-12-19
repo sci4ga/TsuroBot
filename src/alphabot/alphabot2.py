@@ -1,7 +1,7 @@
 # import native modules
 import logging
 # local imports
-from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR
+from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR, receiverIR
 
 logger = logging.getLogger(__name__)
 logger.info("logging from alphabot2: {0}".format(__name__))
@@ -23,6 +23,8 @@ class AlphaBot2:
         self.front_ir = frontIR.Front_IR()
         logger.debug("Add bottom IR to alphabot")
         self.bottom_ir = bottomIR.Bottom_IR()
+        logger.debug("Add IR receiver to alphabot")
+        self.receiver_ir = receiverIR.Receiver_IR()
 
 
 """    def get_state(self):

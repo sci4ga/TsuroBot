@@ -90,6 +90,13 @@ def get_bottom_ir():
     return signal
 
 
+def get_receiver_ir():
+    "get key from IR receiver"
+    # TODO
+    key = tsurobot.receiver_ir.await_key()
+    logger.info(str(key))
+    return key
+
 def put_git_pull(branch_name):
     """
     This function responds to a request for /git and
