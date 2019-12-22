@@ -4,7 +4,6 @@ import logging
 from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR, receiverIR
 
 logger = logging.getLogger(__name__)
-logger.info("logging from alphabot2: {0}".format(__name__))
 
 
 class AlphaBot2:
@@ -26,11 +25,3 @@ class AlphaBot2:
         self.bottom_ir = bottomIR.Bottom_IR()
         logger.debug("Add IR receiver to alphabot")
         self.receiver_ir = receiverIR.Receiver_IR()
-
-
-"""    def get_state(self):
-        return {
-            # TODO: update these to use the getters?
-            "pan": self.camera.pan,
-            "tilt": self.camera.tilt
-        }"""

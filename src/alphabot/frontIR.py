@@ -1,8 +1,15 @@
 import RPi.GPIO as GPIO
 import logging
+import atexit
 
+
+def cleanup():
+    GPIO.cleanup()
+    print("GPIO cleaned up for {0}".format(__name__))
+
+
+atexit.register(cleanup)
 logger = logging.getLogger(__name__)
-logger.info("logging from frontIR: {0}".format(__name__))
 
 
 class Front_IR():

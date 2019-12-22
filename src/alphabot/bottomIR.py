@@ -3,9 +3,16 @@
 import RPi.GPIO as GPIO
 import time
 import logging
+import atexit
 
+
+def cleanup():
+    GPIO.cleanup()
+    print("GPIO cleaned up for {0}".format(__name__))
+
+
+atexit.register(cleanup)
 logger = logging.getLogger(__name__)
-logger.info("logging from bottom IR sensors: {0}".format(__name__))
 
 CS = 5
 Clock = 25
@@ -27,18 +34,18 @@ class Bottom_IR(object):
         GPIO.setup(CS, GPIO.OUT)
         GPIO.setup(DataOut, GPIO.IN, GPIO.PUD_UP)
         GPIO.setup(Button, GPIO.IN, GPIO.PUD_UP)
-
-    """
-    Reads the sensor values into an array. There *MUST* be space
-    for as many values as there were sensors specified in the constructor.
-    Example usage:
-    unsigned int sensor_values[8];
-    sensors.read(sensor_values);
-    The values returned are a measure of the reflectance in abstract units,
-    with higher values corresponding to lower reflectance (e.g. a black
-    surface or a void).
-    """
+    
     def get_analog_read(self):
+        """
+        Reads the sensor values into an array. There *MUST* be space
+        for as many values as there were sensors specified in the constructor.
+        Example usage:
+        unsigned int sensor_values[8];
+        sensors.read(sensor_values);
+        The values returned are a measure of the reflectance in abstract units,
+        with higher values corresponding to lower reflectance (e.g. a black
+        surface or a void).
+        """
         value = [0]*(self.numSensors+1)
         analog_read = {}
         # Read Channel0~channel6 AD value
@@ -188,10 +195,11 @@ class Bottom_IR(object):
         return self.last_value, sensor_values
 
 
-# Simple example prints accel/mag data once per second:
 if __name__ == '__main__':
+    """
+    This example continuously returns measurements from the bottom IR sensors
+    """
     TR = Bottom_IR()
-    print("TRSensor Example")
     while True:
-        print(TR.get_analog_read())
+        print(str(TR.get_analog_read()))
         time.sleep(0.2)
