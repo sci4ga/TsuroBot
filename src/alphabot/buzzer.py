@@ -14,22 +14,30 @@ atexit.register(cleanup)
 logger = logging.getLogger(__name__)
 
 
-class Buzzer():
-    def __init__(self):
-        self.channel = 4
+class Buzzer:
+    def __init__(self, channel: Optional[int] = 4):
+        self._channel = channel
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.channel, GPIO.OUT)
+        GPIO.setup(self._channel, GPIO.OUT)
+        self.on = False
 
+    @property
     def on(self):
-        GPIO.output(self.channel, GPIO.HIGH)
+        return self.__on
 
-    def off(self):
-        GPIO.output(self.channel, GPIO.LOW)
+    @on.setter
+    def on(self, val: bool):
+        if val:
+            self.__on = True
+            GPIO.output(self._channel, GPIO.HIGH)
+        else:
+            self.__on = False
+            GPIO.output(self._channel, GPIO.LOW)
 
     def beep(self, seconds: Optional[int] = 0.1):
-        self.on()
+        self.on = True
         time.sleep(seconds)
-        self.off()
+        self.on = False
 
 
 if __name__ == '__main__':
