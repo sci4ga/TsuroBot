@@ -68,7 +68,7 @@ def post_led(led, red, green, blue):
 
 def get_front_ir():
     "get front IR sensor signals"
-    signal = tsurobot.front_ir.get_front_ir()
+    signal = tsurobot.front_ir.read_sensors()
     logger.info("IR signal: {0}".format(str(signal)))
     return signal
 
