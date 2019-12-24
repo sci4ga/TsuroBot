@@ -1,14 +1,11 @@
 #!/usr/bin/python
-
+# ============================================================================
+# Raspi PCA9685 16-Channel PWM Servo Driver
+# ============================================================================
 import time
 import math
 import smbus
 import logging
-
-
-# ============================================================================
-# Raspi PCA9685 16-Channel PWM Servo Driver
-# ============================================================================
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +31,10 @@ class PCA9685:
         self.address = address
         self.debug = debug
         logger.debug("Reseting PCA9685")
-        self.write(self.__MODE1, 0x00)
+        self.reset()
+
+    def __del__(self):
+        self.reset()
 
     def write(self, reg, value):
         "Writes an 8-bit value to the specified register/address"
@@ -48,7 +48,7 @@ class PCA9685:
         return result
 
     def reset(self):
-        logger.debug("Reseting PCA9685")
+        logger.info("Reseting PCA9685")
         self.write(self.__MODE1, 0x00)
 
     def setPWMFreq(self, freq):
@@ -90,9 +90,9 @@ if __name__ == '__main__':
     while True:
         # setServoPulse(2,2500)
         for i in range(500, 2500, 10):
-            pwm.setServoPulse(0, i)
+            pwm.setServoPulse(1, i)
             time.sleep(0.02)
 
         for i in range(2500, 500, -10):
-            pwm.setServoPulse(0, i)
+            pwm.setServoPulse(1, i)
             time.sleep(0.02)

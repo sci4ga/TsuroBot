@@ -7,7 +7,7 @@ import atexit
 
 def cleanup():
     GPIO.cleanup()
-    print("GPIO cleaned up for {0}".format(__name__))
+    print(f"GPIO cleaned up for {__name__}")
 
 
 atexit.register(cleanup)
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Buzzer:
+    """The Buzzer class actuates the buzzer on the Alphabot2."""
     def __init__(self, channel: Optional[int] = 4):
         self._channel = channel
         GPIO.setmode(GPIO.BCM)

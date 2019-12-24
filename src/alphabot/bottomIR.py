@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import time
 import logging
 import atexit
+from typing import Optional
 
 
 def cleanup():
@@ -14,28 +15,25 @@ def cleanup():
 atexit.register(cleanup)
 logger = logging.getLogger(__name__)
 
-CS = 5
-Clock = 25
-Address = 24
-DataOut = 23
-Button = 7
 
-
-class Bottom_IR(object):
-    def __init__(self, numSensors=5):
-        self.numSensors = numSensors
-        self.calibratedMin = [0] * self.numSensors
-        self.calibratedMax = [1023] * self.numSensors
+class Bottom_IR:
+    def __init__(self, numSensors: Optional[int] = 5):
+        self._numSensors = numSensors
+        self.calibratedMin = [0] * self._numSensors
+        self.calibratedMax = [1023] * self._numSensors
         self.last_value = 0
+        self._CS = 5
+        self._Clock = 25
+        self._Address = 24
+        self._DataOut = 23
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(Clock, GPIO.OUT)
-        GPIO.setup(Address, GPIO.OUT)
-        GPIO.setup(CS, GPIO.OUT)
-        GPIO.setup(DataOut, GPIO.IN, GPIO.PUD_UP)
-        GPIO.setup(Button, GPIO.IN, GPIO.PUD_UP)
-    
-    def get_analog_read(self):
+        GPIO.setup(self._Clock, GPIO.OUT)
+        GPIO.setup(self._Address, GPIO.OUT)
+        GPIO.setup(self._CS, GPIO.OUT)
+        GPIO.setup(self._DataOut, GPIO.IN, GPIO.PUD_UP)
+
+    def get_analog_read(self) -> dict:
         """
         Reads the sensor values into an array. There *MUST* be space
         for as many values as there were sensors specified in the constructor.
@@ -46,39 +44,39 @@ class Bottom_IR(object):
         with higher values corresponding to lower reflectance (e.g. a black
         surface or a void).
         """
-        value = [0]*(self.numSensors+1)
+        value = [0]*(self._numSensors+1)
         analog_read = {}
         # Read Channel0~channel6 AD value
-        for j in range(0, self.numSensors+1):
-            GPIO.output(CS, GPIO.LOW)
+        for j in range(0, self._numSensors+1):
+            GPIO.output(self._CS, GPIO.LOW)
             for i in range(0, 4):
-                # sent 4-bit Address
+                # sent 4-bit self._Address
                 if(((j) >> (3 - i)) & 0x01):
-                    GPIO.output(Address, GPIO.HIGH)
+                    GPIO.output(self._Address, GPIO.HIGH)
                 else:
-                    GPIO.output(Address, GPIO.LOW)
+                    GPIO.output(self._Address, GPIO.LOW)
                 # read MSB 4-bit data
                 value[j] <<= 1
-                if(GPIO.input(DataOut)):
+                if(GPIO.input(self._DataOut)):
                     value[j] |= 0x01
-                GPIO.output(Clock, GPIO.HIGH)
-                GPIO.output(Clock, GPIO.LOW)
+                GPIO.output(self._Clock, GPIO.HIGH)
+                GPIO.output(self._Clock, GPIO.LOW)
             for i in range(0, 6):
                 # read LSB 8-bit data
                 value[j] <<= 1
-                if(GPIO.input(DataOut)):
+                if(GPIO.input(self._DataOut)):
                     value[j] |= 0x01
-                GPIO.output(Clock, GPIO.HIGH)
-                GPIO.output(Clock, GPIO.LOW)
+                GPIO.output(self._Clock, GPIO.HIGH)
+                GPIO.output(self._Clock, GPIO.LOW)
             # no mean ,just delay
 #            for i in range(0,6):
-#                GPIO.output(Clock,GPIO.HIGH)
-#                GPIO.output(Clock,GPIO.LOW)
+#                GPIO.output(self._Clock,GPIO.HIGH)
+#                GPIO.output(self._Clock,GPIO.LOW)
             time.sleep(0.0001)
-            GPIO.output(CS, GPIO.HIGH)
+            GPIO.output(self._CS, GPIO.HIGH)
 
         for x in range(1, 6):
-            analog_read["sensor " + str(x)] = value[x]
+            analog_read[x] = value[x]
         logger.debug(str(analog_read))
         return analog_read
 
@@ -89,13 +87,13 @@ class Bottom_IR(object):
     and used for the readCalibrated() method.
     """
     def calibrate(self):
-        max_sensor_values = [0]*self.numSensors
-        min_sensor_values = [0]*self.numSensors
+        max_sensor_values = [0]*self._numSensors
+        min_sensor_values = [0]*self._numSensors
         for j in range(0, 10):
 
             sensor_values = self.get_analog_read()
 
-            for i in range(0, self.numSensors):
+            for i in range(0, self._numSensors):
                 # set the max we found THIS time
                 if((j == 0) or max_sensor_values[i] < sensor_values[i]):
                     max_sensor_values[i] = sensor_values[i]
@@ -105,7 +103,7 @@ class Bottom_IR(object):
                     min_sensor_values[i] = sensor_values[i]
 
         # record the min and max calibration values
-        for i in range(0, self.numSensors):
+        for i in range(0, self._numSensors):
             if(min_sensor_values[i] > self.calibratedMin[i]):
                 self.calibratedMin[i] = min_sensor_values[i]
             if(max_sensor_values[i] < self.calibratedMax[i]):
@@ -124,7 +122,7 @@ class Bottom_IR(object):
         # read the needed values
         sensor_values = self.get_analog_read()
 
-        for i in range(0, self.numSensors):
+        for i in range(0, self._numSensors):
 
             denominator = self.calibratedMax[i] - self.calibratedMin[i]
 
@@ -166,7 +164,7 @@ class Bottom_IR(object):
         avg = 0
         sum = 0
         on_line = 0
-        for i in range(0, self.numSensors):
+        for i in range(0, self._numSensors):
             value = sensor_values[i]
             if(white_line):
                 value = 1000-value
@@ -181,14 +179,14 @@ class Bottom_IR(object):
 
         if(on_line != 1):
             # If it last read to the left of center, return 0.
-            if(self.last_value < (self.numSensors - 1)*1000/2):
+            if(self.last_value < (self._numSensors - 1)*1000/2):
                 # print("left")
                 self.last_value = 0
 
             # If it last read to the right of center, return the max.
             else:
                 # print("right")
-                self.last_value = (self.numSensors - 1)*1000
+                self.last_value = (self._numSensors - 1)*1000
         else:
             self.last_value = avg/sum
 
@@ -201,5 +199,5 @@ if __name__ == '__main__':
     """
     TR = Bottom_IR()
     while True:
-        print(str(TR.get_analog_read()))
+        print(f"Sensor values: {TR.get_analog_read()}")
         time.sleep(0.2)

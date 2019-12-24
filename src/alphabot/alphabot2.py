@@ -6,6 +6,12 @@ from alphabot import steering, camera, led, buzzer, button, frontIR, bottomIR, r
 logger = logging.getLogger(__name__)
 
 
+# TODO: re-implement camera servo control class PCA9685
+# TODO: improve Servo class
+# TODO: clean up Camera class
+# TODO: test LEDs on another bot
+# TODO: implement turn in Steering class
+# TODO: add example for Vision class
 class AlphaBot2:
     def __init__(self):
         logger.info("Initializing AlphaBot2")

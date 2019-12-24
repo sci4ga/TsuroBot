@@ -1,14 +1,14 @@
 ﻿#!/usr/bin/python
 
 # sudo pip install rpi_ws281x
-from rpi_ws281x import Adafruit_NeoPixel, Color, ws
+from rpi_ws281x import Adafruit_NeoPixel, Color
 import logging
-
+import _rpi_ws281x as ws
 logger = logging.getLogger(__name__)
 
 
 class LED:
-    """Control LED's 0-4"""
+    """Control LED's 1-4"""
     def __init__(self):
         # LED strip configuration:
         LED_COUNT = 4      # Number of LED pixels.
@@ -23,16 +23,35 @@ class LED:
         self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
         # Intialize the library (must be called once before other functions).
         self.strip.begin()
-        self.strip.setPixelColor(0, Color(255, 0, 0))
-        self.strip.setPixelColor(1, Color(0, 255, 0))
-        self.strip.setPixelColor(2, Color(0, 0, 255))
-        self.strip.setPixelColor(3, Color(0, 255, 255))
-        self.strip.show()
+        [self.set_led(x, 0, 0, 0) for x in range(4)]
 
-    def set_led(self, led_num, red, green, blue):
+    def set_led(self, led_num: int, red: int, green: int, blue: int):
         """Set LED color using 0-255 RGB values"""
-        logger.debug("led_num {0} color set to red={1}, green={2}, blue={3}".format(led_num, red, green, blue))
+        logger.debug(f"led_num {led_num} color set to red={red}, green={green}, blue={blue}")
         self.strip.setPixelColor(led_num, Color(red, green, blue))
         logger.debug("show color")
         self.strip.show()
         return None
+
+
+if __name__ == '__main__':
+    led = LED()
+    blink = True
+    import time
+    while True:
+        if blink:
+            led.set_led(0, 255, 0, 0)  # red
+            led.set_led(1, 0, 255, 0)  # green
+            led.set_led(2, 0, 0, 255)  # blue
+            led.set_led(3, 0, 255, 255)  # yellow
+            print("LED's ON.")
+            blink = False
+            time.sleep(1)
+        else:
+            led.set_led(0, 0, 0, 0)  # red
+            led.set_led(1, 0, 0, 0)  # green
+            led.set_led(2, 0, 0, 0)  # blue
+            led.set_led(3, 0, 0, 0)  # yellow
+            print("LED's OFF.")
+            blink = True
+            time.sleep(1)
