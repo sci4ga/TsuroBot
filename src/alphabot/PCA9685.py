@@ -12,24 +12,17 @@ logger = logging.getLogger(__name__)
 
 class PCA9685:
     # Registers/etc.
-    __SUBADR1 = 0x02
-    __SUBADR2 = 0x03
-    __SUBADR3 = 0x04
     __MODE1 = 0x00
     __PRESCALE = 0xFE
     __LED0_ON_L = 0x06
     __LED0_ON_H = 0x07
     __LED0_OFF_L = 0x08
     __LED0_OFF_H = 0x09
-    __ALLLED_ON_L = 0xFA
-    __ALLLED_ON_H = 0xFB
-    __ALLLED_OFF_L = 0xFC
-    __ALLLED_OFF_H = 0xFD
 
-    def __init__(self, address=0x40, debug=False):
-        self.bus = smbus.SMBus(1)
-        self.address = address
-        self.debug = debug
+    def __init__(self, address=0x40):
+        self._bus = smbus.SMBus(1)
+        self._address = address
+        pwm.setPWMFreq(60)
         logger.debug("Reseting PCA9685")
         self.reset()
 
@@ -38,13 +31,13 @@ class PCA9685:
 
     def write(self, reg, value):
         "Writes an 8-bit value to the specified register/address"
-        self.bus.write_byte_data(self.address, reg, value)
+        self._bus.write_byte_data(self._address, reg, value)
         logger.debug("I2C: Write 0x%02X to register 0x%02X" % (value, reg))
 
     def read(self, reg):
         "Read an unsigned byte from the I2C device"
-        result = self.bus.read_byte_data(self.address, reg)
-        logger.debug("I2C: Device 0x%02X returned 0x%02X from reg 0x%02X" % (self.address, result & 0xFF, reg))
+        result = self._bus.read_byte_data(self._address, reg)
+        logger.debug("I2C: Device 0x%02X returned 0x%02X from reg 0x%02X" % (self._address, result & 0xFF, reg))
         return result
 
     def reset(self):
@@ -86,7 +79,7 @@ class PCA9685:
 
 if __name__ == '__main__':
     pwm = PCA9685(0x40, debug=True)
-    pwm.setPWMFreq(50)
+    pwm.setPWMFreq(60)
     while True:
         # setServoPulse(2,2500)
         for i in range(500, 2500, 10):

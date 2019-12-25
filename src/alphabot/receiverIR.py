@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 class Receiver_IR():
     def __init__(self):
-        self.IR = 17
-        self.keys = {0x45: "CH-",
+        self._IR_channel = 17
+        self._keys = {0x45: "CH-",
                      0x47: "CH+",
                      0x46: "CH",
                      0x44: "<<",
@@ -41,21 +41,21 @@ class Receiver_IR():
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(self.IR, GPIO.IN)
+        GPIO.setup(self._IR_channel, GPIO.IN)
 
     def read_IR(self) -> List[int]:
         """
         Read raw IR signal from receiver
         """
-        if GPIO.input(self.IR) == 0:
+        if GPIO.input(self._IR_channel) == 0:
             count = 0
-            while GPIO.input(self.IR) == 0 and count < 200:  # 9ms
+            while GPIO.input(self._IR_channel) == 0 and count < 200:  # 9ms
                 count += 1
                 time.sleep(0.00006)
             if(count < 10):
                 return
             count = 0
-            while GPIO.input(self.IR) == 1 and count < 80:  # 4.5ms
+            while GPIO.input(self._IR_channel) == 1 and count < 80:  # 4.5ms
                 count += 1
                 time.sleep(0.00006)
 
@@ -64,12 +64,12 @@ class Receiver_IR():
             data = [0, 0, 0, 0]
             for i in range(0, 32):
                 count = 0
-                while GPIO.input(self.IR) == 0 and count < 15:    # 0.56ms
+                while GPIO.input(self._IR_channel) == 0 and count < 15:    # 0.56ms
                     count += 1
                     time.sleep(0.00006)
 
                 count = 0
-                while GPIO.input(self.IR) == 1 and count < 40:   # 0: 0.56mx
+                while GPIO.input(self._IR_channel) == 1 and count < 40:   # 0: 0.56mx
                     count += 1                               # 1: 1.69ms
                     time.sleep(0.00006)
 
@@ -93,7 +93,7 @@ class Receiver_IR():
             if data is not None:  # then validate the data, ignore if invalid
                 if data[0]+data[1] == 0xFF and data[2]+data[3] == 0xFF:
                     key = data[2]
-        key_press = self.keys.get(key, "unkown")
+        key_press = self._keys.get(key, "unkown")
         logger.info("Key press is {0}, signal hex({1})".format(key_press, hex(key)))
         return key_press, key
 

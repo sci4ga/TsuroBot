@@ -10,7 +10,7 @@ import time
 logger = logging.getLogger(__name__)
 
 
-class Servo(object):
+class Servo:
     def __init__(self):
         self.pwm = PCA9685(0x40)
         self.pwm.setPWMFreq(50)

@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Steering(object):
+class Steering:
     '''The Steering class coordinates wheel movement of the alphabot2'''
     def __init__(self):
         self.right_wheel = Wheel(fwd_pin=13, rev_pin=12, pwm_pin=6)
