@@ -48,7 +48,7 @@ class Bottom_IR:
         analog_read = {}
         # Read Channel0~channel6 AD value
         for j in range(0, self._numSensors+1):
-            GPIO.output(self._CS, GPIO.LOW)
+            GPIO.output(self._CS, GPIO.LOW)  # turn on IR light
             for i in range(0, 4):
                 # sent 4-bit self._Address
                 if(((j) >> (3 - i)) & 0x01):
@@ -68,12 +68,8 @@ class Bottom_IR:
                     value[j] |= 0x01
                 GPIO.output(self._Clock, GPIO.HIGH)
                 GPIO.output(self._Clock, GPIO.LOW)
-            # no mean ,just delay
-#            for i in range(0,6):
-#                GPIO.output(self._Clock,GPIO.HIGH)
-#                GPIO.output(self._Clock,GPIO.LOW)
             time.sleep(0.0001)
-            GPIO.output(self._CS, GPIO.HIGH)
+            GPIO.output(self._CS, GPIO.HIGH)  # turn off IR light
 
         for x in range(1, 6):
             analog_read[x] = value[x]

@@ -22,7 +22,7 @@ class PCA9685:
     def __init__(self, address=0x40):
         self._bus = smbus.SMBus(1)
         self._address = address
-        pwm.setPWMFreq(60)
+        self.setPWMFreq(60)
         logger.debug("Reseting PCA9685")
         self.reset()
 

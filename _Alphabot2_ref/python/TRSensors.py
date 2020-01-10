@@ -58,9 +58,9 @@ class TRSensor(object):
 				GPIO.output(Clock,GPIO.HIGH)
 				GPIO.output(Clock,GPIO.LOW)
 			#no mean ,just delay
-#			for i in range(0,6):
-#				GPIO.output(Clock,GPIO.HIGH)
-#				GPIO.output(Clock,GPIO.LOW)
+			for i in range(0,6):
+				GPIO.output(Clock,GPIO.HIGH)
+				GPIO.output(Clock,GPIO.LOW)
 			time.sleep(0.0001)
 			GPIO.output(CS,GPIO.HIGH)
 #		print value[1:]
