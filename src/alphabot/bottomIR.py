@@ -33,36 +33,50 @@ class Bottom_IR:
         GPIO.setup(self._CS, GPIO.OUT)
         GPIO.setup(self._DataOut, GPIO.IN, GPIO.PUD_UP)
 
+    """
+    Reads the sensor values into an array. There *MUST* be space
+    for as many values as there were sensors specified in the constructor.
+    Example usage:
+    unsigned int sensor_values[8];
+    sensors.read(sensor_values);
+    The values returned are a measure of the reflectance in abstract units,
+    with higher values corresponding to higher reflectance (e.g. a white
+    surface or a bright light).
+    """
     def get_analog_read(self) -> dict:
-        """
-        Reads the sensor values into an array. There *MUST* be space
-        for as many values as there were sensors specified in the constructor.
-        Example usage:
-        unsigned int sensor_values[8];
-        sensors.read(sensor_values);
-        The values returned are a measure of the reflectance in abstract units,
-        with higher values corresponding to lower reflectance (e.g. a black
-        surface or a void).
-        """
+        #TODO: make this not garbage
         value = [0]*(self._numSensors+1)
         analog_read = {}
         # Read Channel0~channel6 AD value
         for j in range(0, self._numSensors+1):
             GPIO.output(self._CS, GPIO.LOW)  # turn on IR light
+            #keep in mind: everything here does stuff bit by bit
             for i in range(0, 4):
                 # sent 4-bit self._Address
+                # Sends byte representation of sensor number to output channel
+                # AKA tells output which sensor is sending it info
+                # send bit x of the address
                 if(((j) >> (3 - i)) & 0x01):
                     GPIO.output(self._Address, GPIO.HIGH)
                 else:
                     GPIO.output(self._Address, GPIO.LOW)
+
                 # read MSB 4-bit data
+                # double the sensor number and store it into value
+                # Check if there's any input from the data channel
+                # if so, add one to the value
+                # AKA store whether or not each sensor took an input or not
+                # send bit x of the sensor data
                 value[j] <<= 1
                 if(GPIO.input(self._DataOut)):
                     value[j] |= 0x01
+
+                #Tells the io clock to move forward in time
                 GPIO.output(self._Clock, GPIO.HIGH)
                 GPIO.output(self._Clock, GPIO.LOW)
             for i in range(0, 6):
                 # read LSB 8-bit data
+                # send bit x of the sensor data
                 value[j] <<= 1
                 if(GPIO.input(self._DataOut)):
                     value[j] |= 0x01
@@ -83,6 +97,8 @@ class Bottom_IR:
     and used for the readCalibrated() method.
     """
     def calibrate(self):
+        #TODO: change calibrate so we can set the time we are in calibration
+        #TODO: or alternatively a "start calibration" and "stop calibration" function each
         max_sensor_values = [0]*self._numSensors
         min_sensor_values = [0]*self._numSensors
         for j in range(0, 10):
@@ -112,7 +128,6 @@ class Bottom_IR:
     stored separately for each sensor, so that differences in the
     sensors are accounted for automatically.
     """
-
     def readCalibrated(self):
         value = 0
         # read the needed values
@@ -120,6 +135,7 @@ class Bottom_IR:
 
         for i in range(0, self._numSensors):
 
+            #scales to min and max for a specific sensor;
             denominator = self.calibratedMax[i] - self.calibratedMin[i]
 
             if(denominator != 0):
@@ -148,24 +164,28 @@ class Bottom_IR:
        --------------------------------------------
              value0  +  value1  +  value2 + ...
 
-    By default, this function assumes a dark line (high values)
-    surrounded by white (low values).  If your line is light on
-    black, set the optional second argument white_line to true.  In
+    By default, this function assumes a dark line (low values)
+    surrounded by white (high values).  If your line is light on
+    black, set the optional second argument white_line to false.  In
     this case, each sensor value will be replaced by (1000-value)
     before the averaging.
     """
     def readLine(self, white_line=0):
-
+        # TODO: we probably don't need this
+        # TODO: either here or a different class, steering should make sure the
+        #   outside sensors are white and the center sensors are black,
+        #   correcting as needed
+        # TODO: if all white or all black, spin around and hope for the best
         sensor_values = self.readCalibrated()
         avg = 0
         sum = 0
         on_line = 0
         for i in range(0, self._numSensors):
             value = sensor_values[i]
-            if(white_line):
+            if(not white_line):
                 value = 1000-value
             # keep track of whether we see the line at all
-            if(value > 200):
+            if(value > 500):
                 on_line = 1
 
             # only average in values that are above a noise threshold

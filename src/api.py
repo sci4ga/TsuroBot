@@ -125,7 +125,17 @@ def post_test_wheels():
     with a '200' upon successful startup
     """
     # TODO - adapt to alphabot
-    tsurobot.steering.test()
+    tsurobot.steering.right_wheel.pw = 100
+    tsurobot.steering.left_wheel.pw = -100
+    time.sleep(1)
+    tsurobot.steering.right_wheel.pw = 0
+    tsurobot.steering.left_wheel.pw = 0
+    time.sleep(1)
+    tsurobot.steering.right_wheel.pw = -100
+    tsurobot.steering.left_wheel.pw = 100
+    time.sleep(1)
+    tsurobot.steering.right_wheel.pw = 0
+    tsurobot.steering.left_wheel.pw = 0
 
     return make_response('Tsurobot wheel test complete', 200)
 
