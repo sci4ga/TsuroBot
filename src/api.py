@@ -265,5 +265,6 @@ def post_play_game(action):
     This function responds to a request for /tsuro/launch_game
     with a '200' upon successful completion
     """
-    play_game(tsurobot)
+    # play_game(tsurobot)
+    tsurobot.follow_path()
     return make_response('Tsuro game play complete', 200)

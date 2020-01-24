@@ -91,7 +91,35 @@ class Tsurobot(alphabot2.AlphaBot2):
         # once CV says "edge of board imminent", move to await_tile
         # if you see bot, move to DONE and make sad noise
         # If you see edge / start position again, move to DONE and make sad noise
-        raise NotImplementedError
+        while(True):
+            ir_data = self.bottom_ir.get_analog_read()
+            ir_data = {x: ir_data[x] > 500 for x in ir_data}
+
+            # we made a Karnaugh map and did what it said
+            if (ir_data[1] and ir_data[2] or
+                    ir_data[1] and not ir_data[4] or
+                    ir_data[2] and not ir_data[4] or
+                    ir_data[2] and not ir_data[3] or
+                    not ir_data[4] and not ir_data[5] or
+                    not ir_data[3] and not ir_data[4] or
+                    ir_data[2] and not ir_data[5] or
+                    not ir_data[1] and not ir_data[3] and not ir_data[5]):
+                self.steering.left_wheel.pw(100)
+            else:
+                self.steering.left_wheel.pw(0)
+
+            if (not ir_data[1] and ir_data[4] or
+                    not ir_data[1] and not ir_data[2] or
+                    not ir_data[2] and not ir_data[3] or
+                    ir_data[4] and ir_data[5] or
+                    not ir_data[2] and ir_data[5] or
+                    not ir_data[2] and ir_data[4] or
+                    ir_data[1] and not ir_data[3] and ir_data[5] or
+                    not ir_data[3] and ir_data[4]):
+                self.steering.right_wheel.pw(100)
+            else:
+                self.steering.right_wheel.pw(0)
+
         return True
 
 
