@@ -1,6 +1,7 @@
 # local imports
 from alphabot import alphabot2
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 logger.info("logging from tsurobot: {0}".format(__name__))
@@ -93,7 +94,7 @@ class Tsurobot(alphabot2.AlphaBot2):
         # If you see edge / start position again, move to DONE and make sad noise
         while(True):
             ir_data = self.bottom_ir.get_analog_read()
-            ir_data = {x: ir_data[x] > 500 for x in ir_data}
+            ir_data = {x: ir_data[x] < 500 for x in ir_data}
 
             # we made a Karnaugh map and did what it said
             if (ir_data[1] and ir_data[2] or
@@ -104,9 +105,9 @@ class Tsurobot(alphabot2.AlphaBot2):
                     not ir_data[3] and not ir_data[4] or
                     ir_data[2] and not ir_data[5] or
                     not ir_data[1] and not ir_data[3] and not ir_data[5]):
-                self.steering.left_wheel.pw(100)
+                self.steering.left_wheel.pw = 100
             else:
-                self.steering.left_wheel.pw(0)
+                self.steering.left_wheel.pw = 0
 
             if (not ir_data[1] and ir_data[4] or
                     not ir_data[1] and not ir_data[2] or
@@ -116,9 +117,9 @@ class Tsurobot(alphabot2.AlphaBot2):
                     not ir_data[2] and ir_data[4] or
                     ir_data[1] and not ir_data[3] and ir_data[5] or
                     not ir_data[3] and ir_data[4]):
-                self.steering.right_wheel.pw(100)
+                self.steering.right_wheel.pw = 100
             else:
-                self.steering.right_wheel.pw(0)
+                self.steering.right_wheel.pw = 0
 
         return True
 

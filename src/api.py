@@ -260,7 +260,7 @@ def post_camera_burst():
     return make_response('Burst finished', 200)
 
 
-def post_play_game(action):
+def post_play_game():
     """
     This function responds to a request for /tsuro/launch_game
     with a '200' upon successful completion
