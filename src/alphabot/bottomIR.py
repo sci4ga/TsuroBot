@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class Bottom_IR:
+
     def __init__(self, numSensors: Optional[int] = 5):
         self._numSensors = numSensors
         self.calibratedMin = [0] * self._numSensors
@@ -26,6 +27,8 @@ class Bottom_IR:
         self._Clock = 25
         self._Address = 24
         self._DataOut = 23
+        self._historySize = 333
+        self.history = [{}] * self._historySize
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(self._Clock, GPIO.OUT)
@@ -88,6 +91,8 @@ class Bottom_IR:
         for x in range(1, 6):
             analog_read[x] = value[x]
         logger.debug(str(analog_read))
+        self.history.append(analog_read)
+        self.history = self.history[1:self._historySize + 1]
         return analog_read
 
     """

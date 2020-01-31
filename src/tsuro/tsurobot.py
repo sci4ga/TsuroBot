@@ -80,7 +80,7 @@ class Tsurobot(alphabot2.AlphaBot2):
         raise NotImplementedError
         return True
 
-    def follow_path(self):
+    def follow_path_0(self):
         '''
         This moves the Tsurobot along the current path until the path ends or is blocked.
 
@@ -92,36 +92,53 @@ class Tsurobot(alphabot2.AlphaBot2):
         # once CV says "edge of board imminent", move to await_tile
         # if you see bot, move to DONE and make sad noise
         # If you see edge / start position again, move to DONE and make sad noise
+        line_follow_enabled = True
         while(True):
-            ir_data = self.bottom_ir.get_analog_read()
-            ir_data = {x: ir_data[x] < 500 for x in ir_data}
+            # read input from joystick, set line_follow_enabled accordingly
+            button_input = self.button.read_input()
+            if any([button_input[x] for x in button_input]):
+                logger.info("input read: " + str(button_input))
+                line_follow_enabled = not line_follow_enabled
+                time.sleep(1)
 
-            # we made a Karnaugh map and did what it said
-            if (ir_data[1] and ir_data[2] or
-                    ir_data[1] and not ir_data[4] or
-                    ir_data[2] and not ir_data[4] or
-                    ir_data[2] and not ir_data[3] or
-                    not ir_data[4] and not ir_data[5] or
-                    not ir_data[3] and not ir_data[4] or
-                    ir_data[2] and not ir_data[5] or
-                    not ir_data[1] and not ir_data[3] and not ir_data[5]):
-                self.steering.left_wheel.pw = 100
+            if line_follow_enabled:
+                ir_data = self.bottom_ir.get_analog_read()
+                ir_data = {x: ir_data[x] < 500 for x in ir_data}
+
+                # we made a Karnaugh map and did what it said
+                if (ir_data[1] and ir_data[2] or
+                        ir_data[1] and not ir_data[4] or
+                        ir_data[2] and not ir_data[4] or
+                        ir_data[2] and not ir_data[3] or
+                        not ir_data[4] and not ir_data[5] or
+                        not ir_data[3] and not ir_data[4] or
+                        ir_data[2] and not ir_data[5] or
+                        not ir_data[1] and not ir_data[3] and not ir_data[5]):
+                    self.steering.left_wheel.pw = 50
+                else:
+                    self.steering.left_wheel.pw = 0
+
+                if (not ir_data[1] and ir_data[4] or
+                        not ir_data[1] and not ir_data[2] or
+                        not ir_data[2] and not ir_data[3] or
+                        ir_data[4] and ir_data[5] or
+                        not ir_data[2] and ir_data[5] or
+                        not ir_data[2] and ir_data[4] or
+                        ir_data[1] and not ir_data[3] and ir_data[5] or
+                        not ir_data[3] and ir_data[4]):
+                    self.steering.right_wheel.pw = 50
+                else:
+                    self.steering.right_wheel.pw = 0
             else:
                 self.steering.left_wheel.pw = 0
-
-            if (not ir_data[1] and ir_data[4] or
-                    not ir_data[1] and not ir_data[2] or
-                    not ir_data[2] and not ir_data[3] or
-                    ir_data[4] and ir_data[5] or
-                    not ir_data[2] and ir_data[5] or
-                    not ir_data[2] and ir_data[4] or
-                    ir_data[1] and not ir_data[3] and ir_data[5] or
-                    not ir_data[3] and ir_data[4]):
-                self.steering.right_wheel.pw = 100
-            else:
                 self.steering.right_wheel.pw = 0
-
+            #check for input somehow from somewhere/something
         return True
+
+    def follow_path_1(self):
+        '''
+        use the newly created history from bottomIR (PID controller? lagrange interpolation? etc.)
+        '''
 
 
 def play_game(tsurobot=Tsurobot(), next_game_action="look_for_board"):
