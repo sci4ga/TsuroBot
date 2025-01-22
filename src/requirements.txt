@@ -5,8 +5,10 @@ swagger-ui-bundle==0.0.5
 GitPython==2.1.11
 RPi.GPIO==0.6.3
 rpi-ws281x==4.2.2
-#python-smbus
-#smbus
+opencv-python-headless
+smbus
+rpi-libcamera
+picamera2 
 #RPi
 #python-opencv
-#libjpeg8-dev
+libjpeg8-dev
