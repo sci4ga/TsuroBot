@@ -1,4 +1,4 @@
-Flask==2.0.3
+Flask==2.2.5
 flask_restful==0.3.8
 jsonschema==4.17.0
 #connexion[flask] #==2.3.0
