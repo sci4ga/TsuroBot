@@ -35,6 +35,6 @@ class Vision:
 
 
 if __name__ == '__main__':
-    vision = Vision()
+    vision = Vision("/home/tsuro/TsuroBot/src/config_camera.json")
     vision.grab_still(".././temp/test.jpg")
     print("File saved at .././temp/test.jpg")

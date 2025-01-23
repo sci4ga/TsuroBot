@@ -8,32 +8,40 @@ Find the host IP of the Raspberry Pi from your router after you power up the sys
 
 Use Remote SSH VS Code extension to create an SSH sesison to tsuro@[host IP]
 
-Update packages:
-sudo apt-get update
-sudo apt-get upgrade
+# Update packages:
+sudo apt-get update -y
+sudo apt-get upgrade -y
 
-Install git:
-sudo apt-get install git
-sudo apt-get install github-cli
+# Install git:
+sudo apt-get install git -y
+sudo apt-get install gh -y
 
-Authenticate with git using HTTPS:
+# Authenticate with git using HTTPS:
 gh auth login
-
-Pull this code and create/activate a virtual environment:
-gh repo clone sci4ga/TsuroBot
-cd ./TsuroBot
-python -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-apt install libcamera-dev
 
 # enable the camera and the I2C interface and SPI
 sudo raspi-config
 
-pip install -r requirements.txt
-
-# RobotTsuro
 # Required packages:
+
+#sudo apt install libcamera-dev -y
+#sudo apt install python3-libcamera -y
+#sudo apt install libcap-dev -y
+#sudo apt install python3-pip -y
+sudo apt install python3-Flask -y
+sudo apt install python3-rpi.gpio -y
+
+# Pull this code and create/activate a virtual environment:
+
+gh repo clone sci4ga/TsuroBot
+cd ./TsuroBot
+#python -m venv --system-site-packages venv
+#source venv/bin/activate
+pip install --upgrade pip
+#sudo apt install python3-prctl -y
+sudo pip install -r requirements.txt --break-system-packages
+#WARNING: The script connexion is installed in '/home/tsuro/.local/bin' which is not on PATH.
+# RobotTsuro
 
 # OpenCV...
 # Easy setup...
@@ -42,14 +50,16 @@ sudo apt-get install libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
 sudo apt-get install libatlas-base-dev
 sudo apt-get install scons
 sudo apt-get install swig
-sudo pip3 install opencv-contrib-python
+pip install opencv-contrib-python
 
 
 
 # NOTES
 
-when running sudo (needed for LED), use the path to python in the venv. e.g.:
+when running sudo (needed for LED) and in a venv, use the path to python in the venv. e.g.:
 sudo /home/tsuro/TsuroBot/venv/bin/python ./led.py
+
+After re-imaging your rpi, you may need to clear .ssh/known_hosts if you're going to ssh back into the same IP
 
 ~ 2.5GB free space will be needed for install.
 ~1.5GB extra needed for 'opencv_contrib' extra modules

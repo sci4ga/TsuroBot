@@ -116,15 +116,15 @@ paths:
                 items:
                   properties:
                     ctr:
-                      type: bool
+                      type: boolean
                     a:
-                      type: bool
+                      type: boolean
                     b:
-                      type: bool
+                      type: boolean
                     c:
-                      type: bool
+                      type: boolean
                     d:
-                      type: bool
+                      type: boolean
   /test_wheels:
     post:
       operationId: api.post_test_wheels

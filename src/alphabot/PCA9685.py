@@ -4,7 +4,7 @@
 # ============================================================================
 import time
 import math
-import smbus
+import smbus2
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class PCA9685:
     __LED0_OFF_H = 0x09
 
     def __init__(self, address=0x40):
-        self._bus = smbus.SMBus(1)
+        self._bus = smbus2.SMBus(1)
         self._address = address
         self.setPWMFreq(60)
         logger.debug("Reseting PCA9685")
