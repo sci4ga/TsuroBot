@@ -21,7 +21,12 @@ gh auth login
 
 # enable the camera and the I2C interface and SPI
 sudo raspi-config
+Choose Interfacing Options -> SPI -> Yes  to enable the SPI interface
+Choose Interfacing Options -> I2C -> Yes.
+Select Interfacing Options -> Serial, disable shell access, and enable the hardware serial port
+*Choose Enable Camera -> Yes
 
+sudo reboot
 # Required packages:
 
 #sudo apt install libcamera-dev -y
