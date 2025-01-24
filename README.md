@@ -1,70 +1,80 @@
-# RaspberryPi setup
+# Setup
 
-Use the RapberryPi Imager to format a microSD card with Raspberry Pi OS Lite (64-bit) as given here: https://www.raspberrypi.com/documentation/computers/getting-started.html
+## Needed
 
+- Alphabot2 Pi kit
+- A computer with VSCode installed
+- Access to a router
+
+## Install/setup the OS and connect
+
+- Use the RapberryPi Imager to format a microSD card with Raspberry Pi OS Lite (64-bit) as given here: https://www.raspberrypi.com/documentation/computers/getting-started.html 
 Include a username and password, Enable SSH, and provide credentials to your WiFi in the image configuration.
 
-Find the host IP of the Raspberry Pi from your router after you power up the system.
+- Find the host IP of the Raspberry Pi from your router after you power up the system (first startup takes several minutes).
+- Use Remote SSH VS Code extension to create an SSH session to tsuro@[host IP]
 
-Use Remote SSH VS Code extension to create an SSH sesison to tsuro@[host IP]
+## Update packages
 
-# Update packages:
+From your ssh session, run the following.
+
+```bash
 sudo apt-get update -y
 sudo apt-get upgrade -y
+```
 
-# Install git:
-sudo apt-get install git -y
-sudo apt-get install gh -y
+## Install git, authenticate with git using HTTPS, and pull repo
 
-# Authenticate with git using HTTPS:
+```bash
+sudo apt-get install git gh -y
 gh auth login
+```
 
-# enable the camera and the I2C interface and SPI
-sudo raspi-config
-Choose Interfacing Options -> SPI -> Yes  to enable the SPI interface
-Choose Interfacing Options -> I2C -> Yes.
-Select Interfacing Options -> Serial, disable shell access, and enable the hardware serial port
-*Choose Enable Camera -> Yes
+Use these login options:
 
-sudo reboot
-# Required packages:
+- Github.com
+- HTTPS
+- Authenticate with GitHub credentials
+- Paste an authentication token
 
-#sudo apt install libcamera-dev -y
-#sudo apt install python3-libcamera -y
-#sudo apt install libcap-dev -y
-#sudo apt install python3-pip -y
-sudo apt install python3-Flask -y
-sudo apt install python3-rpi.gpio -y
-
-# Pull this code and create/activate a virtual environment:
-
+```gh
 gh repo clone sci4ga/TsuroBot
+```
+
+## enable the camera and the I2C interface and SPI
+
+```bash
+sudo raspi-config
+```
+
+- Choose Interfacing Options -> SPI -> Yes  to enable the SPI interface
+- Choose Interfacing Options -> I2C -> Yes.
+- Select Interfacing Options -> Serial, disable shell access, and enable the hardware serial port
+- Finish
+- Reboot
+
+Create new ssh session with tsuro@[host IP]
+
+## Install pip and pip install requirements
+
+```bash
+sudo apt install python3-pip -y
 cd ./TsuroBot
-#python -m venv --system-site-packages venv
-#source venv/bin/activate
-pip install --upgrade pip
-#sudo apt install python3-prctl -y
+mkdir logs
+cd ./src
+pip install --upgrade pip --break-system-packages
 sudo pip install -r requirements.txt --break-system-packages
-#WARNING: The script connexion is installed in '/home/tsuro/.local/bin' which is not on PATH.
-# RobotTsuro
+```
 
-# OpenCV...
-# Easy setup...
-sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103
-sudo apt-get install libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
-sudo apt-get install libatlas-base-dev
-sudo apt-get install scons
-sudo apt-get install swig
-pip install opencv-contrib-python
+## Run the app
 
+```bash
+sudo python app.py
+```
 
+## NOTES
 
-# NOTES
-
-when running sudo (needed for LED) and in a venv, use the path to python in the venv. e.g.:
-sudo /home/tsuro/TsuroBot/venv/bin/python ./led.py
-
-After re-imaging your rpi, you may need to clear .ssh/known_hosts if you're going to ssh back into the same IP
+When re-imaging your rpi, you may need to clear .ssh/known_hosts if you're going to ssh back into the same IP
 
 ~ 2.5GB free space will be needed for install.
 ~1.5GB extra needed for 'opencv_contrib' extra modules
@@ -72,5 +82,16 @@ After re-imaging your rpi, you may need to clear .ssh/known_hosts if you're goin
 Clear space like this:
 https://www.raspberrypi-spy.co.uk/2018/03/free-space-raspberry-pi-sd-card/
 
-ISSUES:
-swagger UI cache does not clear between executed calls, returning old data
+## ISSUES
+
+We're unable to update Flask and Werkzeug to the latest versions because flask 2.3.0 depends on Werkzeug>=2.3.0 and connexion 2.14.2 depends on werkzeug<2.3 and >=1.0 This project needs to migrate from connexion 2.14.2 to 3.x.x to allow updates to Flask and Werkzeug.
+
+When app.py is run, api.py reloads and therefore throws:
+
+>RuntimeError: A PWM object already exists for this GPIO channel
+
+The reload of api.py is likely caused by:
+
+>ERROR 2025-01-24 09:59:14,576 connexion.apis.abstract abstract.py - Failed to add operation for GET /api/ack
+
+From 2020: swagger UI cache does not clear between executed calls, returning old data

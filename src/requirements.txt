@@ -1,18 +1,61 @@
 Flask==2.2.5 # 2.2.5 works, 2.3.0 depends on Werkzeug>=2.3.0
 flask_restful==0.3.10 # latest on 2023/05/20
 jsonschema==4.23.0 # latest on 2024/07/08
-#connexion[flask] #==2.3.0
 Werkzeug==2.2.3 # 2.2.2 works, latest (3.1.3) on 2024/11/08
 markupsafe==3.0.2 # latest on 2024/10/18
 connexion==2.14.2 # 2.14.2 works (with Werkzeug 2.2.2), next is 3.0.0 migration
 swagger-ui-bundle==0.0.9 # 1.1.0 updates to swagger-ui 4
 GitPython==3.1.44 # latest on 2025/01/02
-#RPi.GPIO #==0.6.3
-rpi-ws281x #==4.2.2
+RPi.GPIO # (0.7.1) latest on 2022/02/06
+rpi-ws281x # (5.0.0) latest on 2023/05/16
 opencv-python-headless
-#smbus
-#rpi-libcamera
-#picamera2 
 
-#    flask 2.3.0 depends on Werkzeug>=2.3.0
-#    connexion 2.14.2 depends on werkzeug<2.3 and >=1.0
+# Freeze from 2025/01/24...
+
+# aniso8601==10.0.0
+# attrs==24.3.0
+# certifi==2022.9.24
+# chardet==5.1.0
+# charset-normalizer==3.0.1
+# click==8.1.8
+# clickclick==20.10.2
+# colorzero==2.0
+# connexion==2.14.2
+# distro==1.8.0
+# Flask==2.2.5
+# Flask-RESTful==0.3.10
+# gitdb==4.0.12
+# GitPython==3.1.44
+# gpiozero==2.0.1
+# idna==3.3
+# inflection==0.5.1
+# itsdangerous==2.2.0
+# Jinja2==3.1.5
+# jsonschema==4.23.0
+# jsonschema-specifications==2024.10.1
+# lgpio==0.2.2.0
+# MarkupSafe==3.0.2
+# numpy==2.2.2
+# opencv-python-headless==4.11.0.86
+# packaging==24.2
+# pigpio==1.78
+# pycryptodomex==3.11.0
+# python-apt==2.6.0
+# pytz==2024.2
+# PyYAML==6.0.2
+# referencing==0.36.1
+# requests==2.28.1
+# rpds-py==0.22.3
+# rpi-lgpio==0.6
+# rpi-ws281x==5.0.0
+# RPi.GPIO==0.7.1
+# six==1.16.0
+# smbus2==0.4.2
+# smmap==5.0.2
+# spidev==3.5
+# ssh-import-id==5.10
+# swagger-ui-bundle==0.0.9
+# toml==0.10.2
+# typing_extensions==4.12.2
+# urllib3==1.26.12
+# Werkzeug==2.2.3
